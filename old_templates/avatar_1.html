@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание аватара</title>
+    <link rel="stylesheet" href="../static/avatar_1.css">
+</head>
+<body>
+    <header>
+        Личный кабинет
+    </header>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="profile">Моя информация</a></li>
+                <li><a href="avatar" id="avatar">Мой аватар</a></li>
+                <li><a href="#">История заказов</a></li>
+                <li><a href="#">Настройки</a></li>
+                <li><a href="#" id="logout-link">Выйти</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h1>У вас пока нет аватара.</h1>
+            <p>Давайте создадим его, чтобы примерять одежду прямо на сайте магазина!</p>
+            <button id="generate-3d-model">Сгенерировать 3D модель</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById('logout-link').addEventListener('click', function(event) {
+            event.preventDefault();  // Предотвращаем стандартное поведение ссылки
+            fetch('/logout')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/';  // Перенаправляем на главную страницу после выхода
+                    } else {
+                        alert('Ошибка при выходе из системы.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Ошибка при выходе из системы.');
+                });
+        });
+
+        document.getElementById('generate-3d-model').addEventListener('click', function() {
+            window.location.href = '/generate_avatar'
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,432 @@
+<div id="authModal" class="modal" style="display: none;">
+    <div class="container1">
+      <div class="form_area">
+        <div class="switch_container" style="margin-top: 20px;">
+          <span class="auth_label">Вход</span>
+          <label class="auth_toggle">
+            <input type="checkbox" id="authSwitch">
+            <span class="auth_slider"></span>
+          </label>
+          <span class="auth_label">Регистрация</span>
+        </div>
+  
+        <!-- ВХОД -->
+        <div id="loginForm" style="width: 100%;">
+          <p class="title">Вход</p>
+          <form id="loginFormElement">
+            <div class="form_group">
+              <input type="email" id="loginEmail" placeholder="Почта" class="form_style" required>
+            </div>
+            <div class="form_group">
+              <input type="password" id="loginPassword" placeholder="Пароль" class="form_style" required>
+            </div>
+            <button class="btn1" type="submit">Войти</button>
+            <div class="auth_link_row">
+              <span class="small-text">Еще нет аккаунта?</span>
+              <span class="text-link" onclick="toggleToRegister()">Зарегистрироваться</span>
+            </div>
+          </form>
+        </div>
+  
+        <!-- РЕГИСТРАЦИЯ -->
+        <div id="registerForm" style="width: 100%; display: none;">
+          <p class="title">Регистрация</p>
+          <form id="registerFormElement">
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+              <div>
+                <div class="form_group">
+                  <input type="text" id="regName" placeholder="Имя" class="form_style" required>
+                </div>
+                <div class="form_group">
+                  <input type="text" id="regSurname" placeholder="Фамилия" class="form_style" required>
+                </div>
+                <div class="form_group">
+                  <input type="date" id="regBirth" class="form_style" required>
+                </div>
+                <div class="form_group">
+                  <label class="sub_title">Пол:</label>
+                  <div style="display: flex; gap: 20px;">
+                    <label><input type="radio" name="gender" value="male" required> Мужской</label>
+                    <label><input type="radio" name="gender" value="female"> Женский</label>
+                  </div>
+                </div>
+                <div class="form_group">
+                  <input type="email" id="regEmail" placeholder="Email" class="form_style" required>
+                </div>
+              </div>
+              <div>
+                <div class="form_group">
+                  <input type="tel" id="regPhone" placeholder="Телефон" class="form_style" required>
+                </div>
+                <div class="form_group">
+                  <select id="regRole" class="form_style" required>
+                    <option value="" disabled selected>Выберите роль</option>
+                    <option value="buyer">Покупатель</option>
+                    <option value="seller">Продавец</option>
+                  </select>
+                </div>
+                <div class="form_group">
+                  <input type="password" id="regPassword" placeholder="Пароль" class="form_style" required>
+                </div>
+                <div class="form_group">
+                  <input type="password" id="regRepassword" placeholder="Повторите пароль" class="form_style" required>
+                </div>
+              </div>
+            </div>
+            <button class="btn1" type="submit">Зарегистрироваться</button>
+            <div class="auth_link_row">
+                <span class="small-text">Уже есть аккаунт?</span>
+                <span class="text-link" onclick="toggleToLogin()">Войти</span>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <style>
+      .switch_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+
+  .auth_label {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .auth_toggle {
+    position: relative;
+    width: 50px;
+    height: 24px;
+  }
+
+  .auth_toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .auth_slider {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    border-radius: 34px;
+    border: 2px solid #333;
+    box-shadow: 2px 2px 0px 0px #E99F4C;
+    transition: 0.4s;
+  }
+
+  .auth_slider::before {
+    content: "";
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: -1px;
+    bottom: 1px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: 0.4s;
+    border: 2px solid #333;
+    box-shadow: 0 2px 0 #333;
+  }
+
+  .auth_toggle input:checked + .auth_slider {
+    background-color: #BC2649;
+  }
+
+  .auth_toggle input:checked + .auth_slider::before {
+    transform: translateX(26px);
+  }
+
+  .auth_link_row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 15px;
+  }
+
+  .small-text {
+    font-size: 14px;
+    color: #333;
+  }
+
+  .text-link {
+    font-size: 14px;
+    color: #264143;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .text-link:hover {
+    color: #BC2649;
+  }
+    .container1 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .form_area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-color: #EDDCD9;
+      height: auto;
+      width: auto;
+      border: 2px solid #264143;
+      border-radius: 20px;
+      box-shadow: 3px 4px 0px 1px #E99F4C;
+    }
+  
+    .title {
+      color: #264143;
+      font-weight: 900;
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+  
+    .sub_title {
+      font-weight: 600;
+      margin: 5px 0;
+    }
+  
+    .form_group {
+      display: flex;
+      flex-direction: column;
+      align-items: baseline;
+      margin: 10px;
+    }
+  
+    .form_style {
+      outline: none;
+      border: 2px solid #264143;
+      box-shadow: 3px 4px 0px 1px #E99F4C;
+      width: 290px;
+      padding: 12px 10px;
+      border-radius: 4px;
+      font-size: 15px;
+    }
+  
+    .form_style:focus, .btn:focus {
+      transform: translateY(4px);
+      box-shadow: 1px 2px 0px 0px #E99F4C;
+    }
+  
+    .btn1 {
+      padding: 15px;
+      margin: 25px 0px 10px;
+      width: 290px;
+      font-size: 15px;
+      background: #DE5499;
+      border-radius: 10px;
+      font-weight: 800;
+      box-shadow: 3px 3px 0px 0px #E99F4C;
+    }
+  
+    .btn:hover {
+      opacity: .9;
+    }
+  
+    .link {
+      font-weight: 800;
+      color: #264143;
+      padding: 5px;
+    }
+  
+    .modal {
+      position: fixed;
+      z-index: 99999;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .switch_container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+  
+    .auth_toggle {
+      position: relative;
+      width: 50px;
+      height: 24px;
+    }
+  
+    .auth_toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+  
+    .auth_slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 34px;
+      border: 2px solid #333;
+      box-shadow: 2px 2px 0px 0px #E99F4C;
+      transition: 0.4s;
+    }
+  
+    .auth_slider::before {
+      content: "";
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: -1px;
+      bottom: 1px;
+      background-color: #fff;
+      border-radius: 50%;
+      transition: 0.4s;
+      border: 2px solid #333;
+      box-shadow: 0 2px 0 #333;
+    }
+  
+    .auth_toggle input:checked + .auth_slider {
+      background-color: #BC2649;
+    }
+  
+    .auth_toggle input:checked + .auth_slider::before {
+      transform: translateX(26px);
+    }
+  </style>
+  
+  <script>
+    const authSwitch = document.getElementById('authSwitch');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginLabel = document.getElementById('loginLabel');
+    const registerLabel = document.getElementById('registerLabel');
+    const toggleAuth = document.getElementById('toggleAuth');
+
+  
+    authSwitch.addEventListener('change', () => {
+    if (authSwitch.checked) {
+      loginForm.style.display = 'none';
+      registerForm.style.display = 'block';
+    } else {
+      loginForm.style.display = 'block';
+      registerForm.style.display = 'none';
+    }
+  });
+  
+    function updateAuthTab() {
+      if (authSwitch.checked) {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+      } else {
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+      }
+    }
+  
+    function toggleToRegister() {
+    authSwitch.checked = true;
+    registerForm.style.display = 'block';
+    loginForm.style.display = 'none';
+  }
+
+  function toggleToLogin() {
+    authSwitch.checked = false;
+    loginForm.style.display = 'block';
+    registerForm.style.display = 'none';
+  }
+  
+    // Закрытие по клику вне модалки
+    window.addEventListener('click', (e) => {
+      const modal = document.getElementById('authModal');
+      if (e.target === modal) modal.style.display = 'none';
+    });
+  
+    function openAuthModal() {
+  requestAnimationFrame(() => {
+    const modal = document.getElementById('authModal');
+    if (modal) {
+      modal.style.display = 'flex';
+    } else {
+      console.error('authModal не найден в DOM');
+    }
+  });
+}
+
+    
+  
+    updateAuthTab();
+  </script>
+
+<script>
+    // Обработка формы логина
+    document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+  
+      const response = await fetch('/log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+  
+      const result = await response.json();
+      if (result.success) {
+        // Закрываем модалку и обновляем кнопку
+        document.getElementById('authModal').style.display = 'none';
+        checkAuthStatusAndRenderButton(); // обновляем кнопку
+      } else {
+        alert('Ошибка входа. Проверь почту и пароль.');
+      }
+    });
+  
+    // Обработка формы регистрации
+    document.getElementById('registerFormElement').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('regName').value;
+      const surname = document.getElementById('regSurname').value;
+      const birth = document.getElementById('regBirth').value;
+      const gender = document.querySelector('input[name="gender"]:checked')?.value;
+      const email = document.getElementById('regEmail').value;
+      const phone = document.getElementById('regPhone').value;
+      const role = document.getElementById('regRole').value;
+      const password = document.getElementById('regPassword').value;
+      const repassword = document.getElementById('regRepassword').value;
+  
+      if (password !== repassword) {
+        alert('Пароли не совпадают!');
+        return;
+      }
+  
+      const response = await fetch('/reg', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, surname, birth, gender, email, phone, role, password })
+      });
+  
+      const result = await response.json();
+      if (result.success) {
+        document.getElementById('authModal').style.display = 'none';
+        checkAuthStatusAndRenderButton(); // обновляем кнопку
+      } else {
+        alert('Ошибка регистрации. Возможно, пользователь уже существует.');
+      }
+    });
+  </script>

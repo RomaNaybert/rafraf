@@ -1,0 +1,19 @@
+{
+  "id": 1743090017,
+  "name": "fgv",
+  "address": "fav",
+  "email": "sbzlatvm@mail.ru",
+  "cart": [
+    {
+      "id": "86",
+      "quantity": 1,
+      "size": "XS"
+    },
+    {
+      "id": 86,
+      "size": "XS",
+      "quantity": 1
+    }
+  ],
+  "time": "2025-03-27T20:40:17.451785"
+}

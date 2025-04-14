@@ -1,0 +1,1040 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<section class="content-section">
+    <!-- БАННЕР -->
+    
+    <!-- СЕКЦИЯ 3D + СКИДКИ -->
+    
+    <div class="main-section">
+        <!-- 3D-модель -->
+        <div class="model-block">
+            <div class="pricing-plan">3D-модель</div>
+            <model-viewer
+                src="{{ url_for('static', filename='models/model.glb') }}"
+                alt="3D модель"
+                auto-rotate
+                camera-controls
+                disable-zoom
+                animation-name: spin;
+animation-duration: 30s;
+animation-iteration-count: infinite;
+                style="width: 310px; height: 350px;"
+                ar
+                ar-modes="webxr scene-viewer quick-look"
+                environment-image="neutral"
+                shadow-intensity="1"
+                exposure="1">
+            </model-viewer>
+            <button class="price-value" onclick="window.location.href='{{ url_for('generate_avatar') }}'">Создать свой аватар</button>
+        </div>
+        
+        <!-- Блок скидок -->
+        <div class="discounts-wrapper">
+            <div class="discount-column">
+                <div class="discount-card small"><img src="/static/images/discount1.jpg" alt="Скидка 1"></div>
+                <div class="discount-card small"><img src="/static/images/discount4.jpg" alt="Скидка 4"></div>
+            </div>
+            
+            <div class="discount-card large center-card"><img src="/static/images/discount2.jpg" alt="Скидка 2"></div>
+            
+            <div class="discount-column">
+                <div class="discount-card small"><img src="/static/images/discount3.jpg" alt="Скидка 3"></div>
+                <div class="discount-card small"><img src="/static/images/discount5.jpg" alt="Скидка 5"></div>
+            </div>
+            
+            <div class="discount-card large center-card"><img src="/static/images/discount6.jpg" alt="Скидка 6"></div>
+            
+            <div class="discount-column">
+                <div class="discount-card small"><img src="/static/images/discount7.jpg" alt="Скидка 7"></div>
+                <div class="discount-card small"><img src="/static/images/discount8.jpg" alt="Скидка 8"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-section" style="gap: 60px; align-items: stretch;">
+      <!-- Левая колонка: описание -->
+      <div style="display: flex; flex-direction: column; gap: 30px; flex: 1;">
+      <div class="neo-title-section">
+        <h1 class="neo-title">🛠️ Создание 3D модели</h1>
+      </div>
+      <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+        <h2 style="font-size: 28px; font-weight: bold; margin-bottom: 20px;">Как это работает?</h2>
+        <p style="font-size: 16px; line-height: 1.6;">
+          Вы можете загрузить фото вашей одежды, и система создаст 3D-модель. <br>
+          После генерации вы сможете скачать готовый .glb-файл и использовать его в любых 3D-просмотрщиках или AR-приложениях.
+        </p>
+      </div>
+      <div class="neo-guide-block">
+        <button class="brutal-button" onclick="showRecommendations()" data-content="Рекомендации к фото">
+          <span class="button_top">Рекомендации к фото</span>
+        </button>
+      </div>
+      <div id="recommendation-popup" class="popup hidden">
+        <div class="popup-content">
+          <h3>📸 Рекомендации к фото</h3>
+          <ul>
+            <li>• Фото на белом или нейтральном фоне</li>
+            <li>• Без сильных теней и бликов</li>
+            <li>• Цельный силуэт без посторонних объектов</li>
+            <li>• Высокое качество изображения</li>
+          </ul>
+          <button class="brutal-button" onclick="hideRecommendations()" data-content="Закрыть">
+            <span class="button_top">Закрыть</span>
+          </button>
+        </div>
+      </div>
+      </div>
+      <style>
+/* === МОБИЛЬНАЯ АДАПТАЦИЯ СТИЛЕЙ === */
+
+@media (max-width: 768px) {
+  body {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button, .neo-button, .brutal-button {
+    transition: all 0.3s ease-in-out;
+    touch-action: manipulation;
+  }
+
+  /* Центровка текста и кнопок */
+  .neo-title-section, .neo-guide-block, .result-block {
+    text-align: center;
+  }
+
+  /* Заголовки поменьше и с отступами */
+  .neo-title {
+    font-size: 24px !important;
+    text-align: center;
+    margin: 0 auto 20px auto;
+  }
+
+  h2 {
+    font-size: 30px !important;
+    text-align: center;
+  }
+
+  /* Кнопки на всю ширину */
+  .brutal-button,
+  .neo-button {
+    width: 100% !important;
+    font-size: 16px;
+  }
+
+  /* Модальное окно рекомендаций */
+  #recommendation-popup .popup-content {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none;
+    max-height: none;
+    top: 0 !important;
+    left: 0 !important;
+    border-radius: 0 !important;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+
+  /* Neo-window: адаптивная ширина и отступ */
+  .neo-window {
+    width: 100% !important;
+    margin-top: 20px;
+  }
+
+  /* Пропорциональная высота модели */
+  model-viewer {
+    width: 100% !important;
+    height: 350px !important;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  /* 1. Создание 3D модели — вертикально */
+  .main-section {
+    flex-direction: column !important;
+    gap: 40px !important;
+    align-items: center !important;
+  }
+
+  /* 2. Уменьшаем картинку ателье */
+  .hero-banner {
+    background-size: contain !important;
+    height: 110px !important; /* Уменьшено для мобильной версии */
+    background-position: center !important;
+  }
+
+  /* 3. Карусель на всю ширину */
+  .carousel-section {
+    overflow: hidden;
+    width: 100vw;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+
+  .carousel-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 12px;
+    padding: 10px 0;
+  }
+
+  .carousel-product-card {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+    width: 160px !important;
+  }
+
+  .carousel-btn {
+    display: none !important;
+  }
+
+  /* Убираем блок со скидками */
+  .discounts-wrapper {
+    display: none !important;
+  }
+
+  /* Дополнительно: подправим 3D модель по отступам */
+  .model-block {
+    padding-top: 30px !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  /* Убираем фиксированную ширину у neo-window */
+  .neo-window {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  /* Полностью растягиваем блок подборки образов */
+  .looks-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px;
+  }
+
+  .look-card {
+    width: 100% !important;
+  }
+
+  /* Исправление блока загрузки фото */
+  .file-input {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  input[type="file"] {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+}
+
+
+
+      .neo-window {
+        width: 450px;
+        background: #BC2649;
+        border: 4px solid #000000;
+        box-shadow: 12px 12px 0 #000000;
+        padding: 0;
+      }
+
+      .neo-header {
+        background: #FFFFFF;
+        color: #000000;
+        padding: 10px 20px;
+        font-weight: 900;
+        font-size: 18px;
+        border-bottom: 4px solid #000000;
+      }
+
+      .neo-content {
+        padding: 20px;
+        color: #FFFFFF;
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .file-input {
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+
+      input[type="file"] {
+        background-color: #FFFFFF;
+        border: 2px solid #000000;
+        padding: 5px;
+        font-weight: 600;
+        color: #000000;
+        margin-bottom: 10px;
+      }
+
+      .neo-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #CACCCB;
+        border: 3px solid #000000;
+        color: #000000;
+        font-weight: bold;
+        text-decoration: none;
+        box-shadow: 5px 5px 0 #000000;
+        transition: all 0.2s ease;
+        margin-top: 15px;
+      }
+
+      .neo-button:hover {
+        translate: 2px 2px;
+        box-shadow: 2px 2px 0 #000000;
+      }
+
+      .neo-button:active {
+        translate: 4px 4px;
+        box-shadow: none;
+      }
+
+      .result-block {
+        margin-top: 20px;
+        background-color: #FFFFFF;
+        color: #000000;
+        border: 3px solid #000000;
+        box-shadow: 8px 8px 0 #000000;
+        padding: 15px;
+        font-weight: 700;
+      }
+
+      .result-block.error {
+        background-color: #BC2649;
+        color: #FFFFFF;
+        border: 3px solid #000000;
+        box-shadow: 8px 8px 0 #000000;
+      }
+
+      .carousel-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 20px;
+  padding: 20px 0;
+  flex-wrap: nowrap; /* 🔐 запрет на перенос */
+}
+
+.carousel-product-card {
+  flex: 0 0 auto; /* 🔒 не сжимается и не растягивается */
+  width: 200px;
+  height: 320px;
+  border: 3px solid black;
+  box-shadow: 6px 6px 0 black;
+  padding: 10px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+  transition: transform 0.3s ease;
+}
+
+.carousel-product-card:hover {
+  transform: scale(1.03);
+}
+
+.carousel-img-card {
+  width: 100%;
+  height: 200px;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.carousel-img-card img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.carousel-info-card {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.carousel-add-cart {
+  padding: 6px 12px;
+  background-color: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 4px 4px 0 black;
+  transition: all 0.3s ease;
+}
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+}
+
+#modal-cart-btn.added {
+  background-color: var(--magenta) !important;
+  color: var(--white) !important;
+}
+.carousel-add-cart:hover {
+  background-color: var(--magenta);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 black;
+}
+.looks-section {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  padding: 60px 20px;
+  box-sizing: border-box;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(188, 38, 73, 0.1) 0%,
+    rgba(255, 255, 255, 0.96) 100%
+  );
+  border-top: 2px solid var(--light-gray);
+  border-bottom: 2px solid var(--light-gray);
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 1s ease;
+}
+
+.looks-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (max-width: 768px) {
+  header .burger,
+  header .user-actions {
+    display: none !important;
+  }
+
+  footer .burger,
+  footer .user-actions {
+    display: none !important;
+  }
+}
+      </style>
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const section = document.querySelector('.looks-section');
+        
+          const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                section.classList.add('visible');
+                observer.disconnect(); // чтобы не повторялось
+              }
+            });
+          }, {
+            threshold: 0.1
+          });
+        
+          observer.observe(section);
+        });
+        </script>
+      <!-- Правая колонка: окно загрузки -->
+       
+      <div class="neo-window">
+        <div class="neo-header">📸 Загрузка фото для генерации 3D-модели</div>
+        <div class="neo-content">
+          <form method="POST" enctype="multipart/form-data">
+            <div class="file-input">
+              <input type="file" name="image" required>
+            </div>
+            <button class="neo-button" type="submit">✨ Отправить</button>
+          </form>
+
+          {% if model_url %}
+          <div class="result-block">
+            <h3>✅ Модель успешно создана!</h3>
+            <a class="neo-button" href="{{ url_for('static', filename='model.glb') }}" download>📥 Скачать 3D модель (.glb)</a>
+          </div>
+          {% elif error %}
+          <div class="result-block error">
+            <h3>❌ Ошибка:</h3>
+            <p>{{ error }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+    
+    <a href="/studio" class="hero-banner clickable-banner">
+    </a>
+    <!-- СЕКЦИЯ КАРУСЕЛЬ ТОВАРОВ -->
+    <section class="carousel-section">
+      <button class="carousel-btn left" onclick="scrollCarousel('product-carousel', -1)">‹</button>
+  
+      <div class="carousel-container" id="product-carousel">
+        {% for product in carousel_products %}
+        <div class="carousel-product-card"
+     data-product-id="{{ product.id }}"
+     onclick="handleCardClick(event)">
+                  <div class="carousel-img-card">
+            <img src="{{ product.thumbnail }}" alt="{{ product.translated_title }}">
+          </div>
+          <div class="carousel-info-card">
+            <p><strong>{{ product.translated_title }}</strong></p>
+            <p>Цена: {{ product.price }} р</p>
+          </div>
+          <div class="carousel-add-cart" data-id="{{ product.id }}">В корзину</div>
+        </div>
+        {% endfor %}
+      </div>
+  
+      <button class="carousel-btn right" onclick="scrollCarousel('product-carousel', 1)">›</button>
+  
+      <div class="dots">
+        {% for i in range(carousel_products|length // 3 + 1) %}
+          <span class="dot {% if i == 0 %}active{% endif %}"></span>
+        {% endfor %}
+      </div>
+    </section>
+    
+    <!-- СЕКЦИЯ ПОДБОРКИ ОБРАЗОВ -->
+    <section class="looks-section">
+      <h2>Подборка образов</h2>
+      <p class="subtitle">Основано на ваших интересах.</p>
+      <div class="looks-grid">
+        <div class="look-card" onclick="openLookModal(0)">
+          <div class="head">Летний образ</div>
+          <div class="look-img" style="background-image: url('/static/img/look1.jpg');"></div>
+          <div class="content">Описание образа — стиль, цветовая палитра, вдохновение и т.д.</div>
+        </div>
+  
+        <div class="look-card" onclick="openLookModal(1)">
+          <div class="head">Городской стиль</div>
+          <div class="look-img" style="background-image: url('/static/img/look2.jpg');"></div>
+          <div class="content">Современный и минималистичный стиль — идеально для городского лука.</div>
+        </div>
+  
+        <div class="look-card" onclick="openLookModal(2)">
+          <div class="head">Яркий акцент</div>
+          <div class="look-img" style="background-image: url('/static/img/look3.jpg');"></div>
+          <div class="content">Свежий образ с акцентом на аксессуары и яркие элементы.</div>
+        </div>
+      </div>
+    </section>
+  
+    <div id="look-modal" class="popup hidden" onclick="closeLookModal(event)">
+      <div class="popup-content">
+        <h3 id="look-modal-title"></h3>
+        <img id="look-modal-img" src="" alt="" style="max-width: 100%; margin: 15px 0;">
+        <p id="look-modal-description" style="margin: 10px 0 20px;"></p>
+        <div class="carousel-container" id="look-modal-products"></div>
+        <button class="neo-button" onclick="closeLookModal()">Закрыть</button>
+      </div>
+    </div>
+ 
+    <div id="product-modal" class="popup hidden" onclick="closeProductModal(event)">
+      <div class="popup-content">
+        <h3 id="modal-title"></h3>
+        <img id="modal-img" src="" alt="" style="max-width: 100%; margin: 15px 0;">
+        <p id="modal-description" style="margin: 10px 0;"></p>
+    
+        <!-- Цена -->
+        <p id="modal-price" style="font-weight: bold; font-size: 18px; margin-bottom: 10px;">Цена: 0 ₽</p>
+    
+        <!-- Выбор размера (будет динамически меняться в зависимости от категории) -->
+        <div id="size-container" style="margin-bottom: 20px; display: none;">
+          <label for="modal-size" style="font-weight: bold;">Размер:</label>
+          <select id="modal-size" style="margin-top: 5px; padding: 5px; border: 1px solid #ccc; border-radius: 5px;"></select>
+        </div>
+    
+        <!-- Кнопки -->
+        <div class="modal-buttons">
+          <button class="neo-button" id="modal-cart-btn">В корзину</button>
+          <button class="neo-button" onclick="closeProductModal()">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  
+  <script>
+  const looks = [
+    {
+      title: 'Летний образ',
+      description: 'Описание образа — стиль, цветовая палитра, вдохновение и т.д.',
+      image: '/static/img/look1.jpg',
+      products: getRandomProducts(3)
+    },
+    {
+      title: 'Городской стиль',
+      description: 'Современный и минималистичный стиль — идеально для городского лука.',
+      image: '/static/img/look2.jpg',
+      products: getRandomProducts(3)
+    },
+    {
+      title: 'Яркий акцент',
+      description: 'Свежий образ с акцентом на аксессуары и яркие элементы.',
+      image: '/static/img/look3.jpg',
+      products: getRandomProducts(3)
+    }
+  ];
+  
+  function getRandomProducts(count) {
+    if (!window.allProducts || !Array.isArray(window.allProducts)) return [];
+    const shuffled = [...window.allProducts].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  }
+  
+  function openLookModal(index) {
+    const look = looks[index];
+    document.getElementById('look-modal-title').textContent = look.title;
+    document.getElementById('look-modal-description').textContent = look.description;
+    document.getElementById('look-modal-img').src = look.image;
+  
+    const container = document.getElementById('look-modal-products');
+    container.innerHTML = '';
+  
+    look.products.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'carousel-product-card';
+      card.innerHTML = `
+        <div class="carousel-img-card">
+          <img src="${product.thumbnail}" alt="${product.title}">
+        </div>
+        <div class="carousel-info-card">
+          <p><strong>${product.title}</strong></p>
+          <p>Цена: ${product.price} ₽</p>
+        </div>
+        <div class="carousel-add-cart" data-id="${product.id}" onclick="addToCart('${product.id}')">В корзину</div>
+      `;
+      container.appendChild(card);
+    });
+  
+    document.getElementById('look-modal').classList.remove('hidden');
+  }
+  
+  function closeLookModal(event) {
+    if (!event || event.target.id === 'look-modal') {
+      document.getElementById('look-modal').classList.add('hidden');
+    }
+  }
+  
+  document.addEventListener('DOMContentLoaded', () => {
+  const jsonEl = document.getElementById('all-products-json');
+  window.allProducts = JSON.parse(jsonEl.textContent);
+});
+
+
+  </script>
+<!-- Подключение Three.js и OBJLoader -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.148.0/examples/js/loaders/OBJLoader.js"></script>
+<script id="all-products-json" type="application/json">
+  {{ carousel_products | tojson }}
+</script>
+<script>
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+  camera.position.set(0, 1.5, 3); // дальше и выше — лучше видно
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(180, 180);
+  document.getElementById('model-viewer').appendChild(renderer.domElement);
+
+  // Освещение
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.set(2, 3, 2);
+  scene.add(directionalLight);
+
+  // Загрузка OBJ
+  const loader = new THREE.OBJLoader();
+  loader.load(
+    "{{ url_for('static', filename='models/model.obj') }}",
+    function (object) {
+      object.scale.set(2, 2, 2);
+      object.position.y = -0.5;
+
+      object.traverse(function (child) {
+        if (child instanceof THREE.Mesh) {
+          child.material = new THREE.MeshStandardMaterial({ color: 0x555555 });
+        }
+      });
+
+      scene.add(object);
+
+      function animate() {
+        requestAnimationFrame(animate);
+        object.rotation.y += 0.01;
+        renderer.render(scene, camera);
+      }
+      animate();
+    },
+    undefined,
+    function (error) {
+      console.error("Ошибка при загрузке OBJ:", error);
+    }
+  );
+</script>
+<script>
+  // Исправление отображения model-viewer (гарантирует подгрузку)
+  document.addEventListener("DOMContentLoaded", () => {
+    const viewer = document.querySelector("model-viewer");
+    if (viewer) {
+      viewer.setAttribute("reveal", "auto");
+      viewer.style.display = "block";
+    }
+  });
+  </script>
+   
+      <script>
+         let currentSlide = 0;
+  let slidesPerPage = 1;
+  let totalPages = 1;
+
+  function calculateSlides() {
+    const container = document.getElementById('product-carousel');
+    const cards = container.querySelectorAll('.carousel-product-card');
+    const containerWidth = container.offsetWidth;
+    const cardWidth = cards[0]?.offsetWidth || 200;
+
+    slidesPerPage = Math.floor(containerWidth / (cardWidth + 20)); // 20 — gap
+    totalPages = Math.ceil(cards.length / slidesPerPage);
+    updateDots();
+  }
+
+  function scrollCarousel(id, direction) {
+    const container = document.getElementById(id);
+    const card = container.querySelector('.carousel-product-card');
+    if (!card) return;
+
+    const cardWidth = card.offsetWidth + 20; // учёт отступа между карточками
+    currentSlide += direction;
+    currentSlide = Math.max(0, Math.min(currentSlide, totalPages - 1));
+
+    container.scrollTo({
+      left: currentSlide * cardWidth * slidesPerPage,
+      behavior: 'smooth'
+    });
+
+    updateDots();
+  }
+
+  function updateDots() {
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentSlide);
+    });
+  }
+
+  function createDots() {
+    const dotsContainer = document.querySelector('.dots');
+    dotsContainer.innerHTML = '';
+
+    for (let i = 0; i < totalPages; i++) {
+      const dot = document.createElement('span');
+      dot.classList.add('dot');
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => {
+        scrollCarousel('product-carousel', i - currentSlide);
+      });
+      dotsContainer.appendChild(dot);
+    }
+  }
+
+  window.addEventListener('resize', () => {
+    calculateSlides();
+    createDots();
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    calculateSlides();
+    createDots();
+    setInterval(() => scrollCarousel('product-carousel', 1), 6000);
+  });
+        
+        // Автопрокрутка
+        function startAutoScroll() {
+          stopAutoScroll();
+          autoScrollInterval = setInterval(() => {
+            scrollCarousel(1);
+            if (currentSlide >= slides.length - slidesToShow) currentSlide = -1;
+          }, 5000);
+        }
+        function stopAutoScroll() {
+          clearInterval(autoScrollInterval);
+        }
+        
+        // Добавление товара в корзину
+        
+        
+        document.addEventListener('DOMContentLoaded', () => {
+          updateDots();
+          startAutoScroll();
+        
+          // Клик по точкам (если надо)
+          dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+              currentSlide = i;
+              scrollCarousel(0);
+              stopAutoScroll(); // сбрасываем автопрокрутку
+              startAutoScroll();
+            });
+          });
+        });
+        </script>
+      
+     
+      
+     <script>
+  let products = {{ carousel_products | tojson | safe }};
+
+  function openModalFromElement(card) {
+    const id = card.dataset.productId;
+    const product = products.find(p => p.id == id);
+    if (!product) return;
+    openProductModal(product);
+  }
+
+  function openProductModal(product) {
+  const modal = document.getElementById('product-modal');
+  document.getElementById('modal-title').textContent = product.translated_title;
+  document.getElementById('modal-img').src = product.thumbnail;
+  document.getElementById('modal-description').textContent = product.translated_description || 'Описание отсутствует';
+
+  const cartBtn = document.getElementById('modal-cart-btn');
+  cartBtn.textContent = 'В корзину';
+  cartBtn.classList.remove('added');
+
+  cartBtn.onclick = () => {
+    addToCart(product.id);
+    cartBtn.textContent = 'В корзине';
+    cartBtn.classList.add('added');
+  };
+
+  modal.classList.remove('hidden');
+}
+
+  function closeProductModal(e) {
+    if (!e || e.target.id === 'product-modal') {
+      document.getElementById('product-modal').classList.add('hidden');
+    }
+  }
+
+  function addToCart(id) {
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const existing = cart.find(item => item.id === id);
+    if (existing) {
+      existing.quantity++;
+    } else {
+      cart.push({
+  id: product.id,
+  title: product.translated_title || product.title,
+  price: product.price,
+  size: selectedSize,
+  quantity: 1
+});
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateAllButtons();
+  }
+  function handleCardClick(event) {
+  const id = event.currentTarget.dataset.productId;
+  const product = window.allProducts.find(p => p.id == id);
+  if (product) openProductModal(product);
+}
+
+
+  function updateAllButtons() {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    document.querySelectorAll('.carousel-add-cart').forEach(btn => {
+      const id = btn.dataset.id;
+      if (id && cart.some(item => item.id === id)) {
+        btn.textContent = 'В корзине';
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    updateAllButtons();
+    document.querySelectorAll('.carousel-add-cart').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        addToCart(id);
+        btn.textContent = 'В корзине';
+      });
+    });
+  });
+</script>
+      
+      <script id="all-products-json" type="application/json">
+        {{ carousel_products | tojson }}
+      </script>
+      
+      <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const jsonEl = document.getElementById('all-products-json');
+        const products = JSON.parse(jsonEl.textContent);
+      
+        // Назначаем клики на карточки товаров
+        document.querySelectorAll('.carousel-product-card').forEach(card => {
+          card.addEventListener('click', () => {
+            const id = card.getAttribute('data-product-id');
+            const product = products.find(p => p.id == id);
+            if (product) showProductModal(product);
+          });
+        });
+      
+        // Обновляем кнопки корзины
+        updateAllCartButtons();
+      });
+      
+      function showProductModal(product) {
+  document.getElementById('modal-title').textContent = product.translated_title;
+  document.getElementById('modal-img').src = product.thumbnail;
+  document.getElementById('modal-description').textContent = product.translated_description || 'Описание отсутствует';
+
+  const btn = document.getElementById('modal-cart-btn');
+  btn.textContent = 'В корзину';
+  btn.classList.remove('added');
+  btn.onclick = () => {
+    addToCart(product.id);
+    btn.textContent = 'В корзине';
+    btn.classList.add('added');
+  };
+
+  document.getElementById('product-modal').classList.remove('hidden');
+}
+      
+      function closeProductModal(e) {
+        if (!e || e.target.id === 'product-modal') {
+          document.getElementById('product-modal').classList.add('hidden');
+        }
+      }
+      
+      function addToCart(id) {
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const existing = cart.find(p => p.id == id);
+        if (existing) {
+          existing.quantity += 1;
+        } else {
+          cart.push({
+  id: product.id,
+  title: product.translated_title || product.title,
+  price: product.price,
+  size: selectedSize,
+  quantity: 1
+});
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateAllCartButtons();
+      }
+      function openProductModal(product) {
+  document.getElementById("modal-title").textContent = product.title;
+  document.getElementById("modal-img").src = product.image;
+  document.getElementById("modal-description").textContent = product.description;
+  document.getElementById("modal-price").textContent = `Цена: ${product.price} ₽`;
+
+  // При желании можно установить выбранный размер по умолчанию или из localStorage
+
+  document.getElementById("product-modal").classList.remove("hidden");
+}
+      function updateAllCartButtons() {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        document.querySelectorAll('.carousel-add-cart').forEach(btn => {
+          const id = btn.dataset.id;
+          if (cart.some(p => p.id == id)) {
+            btn.textContent = 'В корзине';
+          }
+        });
+      }
+      </script>
+      <script>
+        function openProductModal(product) {
+          const modal = document.getElementById('product-modal');
+          document.getElementById('modal-title').textContent = product.translated_title || product.title;
+          document.getElementById('modal-img').src = product.thumbnail || product.image;
+          document.getElementById('modal-description').textContent = product.translated_description || product.description || 'Описание недоступно';
+          document.getElementById('modal-price').textContent = `Цена: ${product.price} ₽`;
+        
+          // Определяем тип размера по названию/категории
+          const sizeContainer = document.getElementById('size-container');
+          const sizeSelect = document.getElementById('modal-size');
+          const lowerTitle = (product.title || '').toLowerCase(); // ⬅️ оставь только оригинальное название
+let sizes = [];
+
+if (
+  lowerTitle.includes('shoes') ||
+  lowerTitle.includes('sneaker') ||
+  lowerTitle.includes('nike') ||
+  lowerTitle.includes('rider') ||
+  lowerTitle.includes('slipper')
+) {
+  sizes = ['36', '37', '38', '39', '40', '41', '42', '43', '44'];
+} else if (
+  lowerTitle.includes('watch')
+) {
+  sizes = ['S', 'M', 'L'];
+} else if (
+  lowerTitle.includes('shirt') ||
+  lowerTitle.includes('tshirt') ||
+  lowerTitle.includes('jacket') ||
+  lowerTitle.includes('coat') ||
+  lowerTitle.includes('dress') ||
+  lowerTitle.includes('hoodie') ||
+  lowerTitle.includes('clothing') ||
+  lowerTitle.includes('suit') ||
+  lowerTitle.includes('skirt') ||
+  lowerTitle.includes('gown')
+) {
+  sizes = ['XS', 'S', 'M', 'L', 'XL'];
+}
+        
+          sizeSelect.innerHTML = '';
+          sizes.forEach(s => {
+            const option = document.createElement('option');
+            option.value = s;
+            option.textContent = s;
+            sizeSelect.appendChild(option);
+          });
+        
+          sizeContainer.style.display = 'block';
+        
+          // Кнопка "в корзину"
+          const cartBtn = document.getElementById('modal-cart-btn');
+          cartBtn.textContent = 'В корзину';
+          cartBtn.classList.remove('added');
+          cartBtn.onclick = () => {
+            const size = sizeSelect.value;
+            addToCart(product.id, size);
+            cartBtn.textContent = 'В корзине';
+            cartBtn.classList.add('added');
+          };
+        
+          modal.classList.remove('hidden');
+        }
+        
+        function addToCart(id, size) {
+          let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+          const existing = cart.find(item => item.id === id && item.size === size);
+          if (existing) {
+            existing.quantity++;
+          } else {
+            cart.push({
+  id: product.id,
+  title: product.translated_title || product.title,
+  price: product.price,
+  size: selectedSize,
+  quantity: 1
+});
+          }
+          localStorage.setItem('cart', JSON.stringify(cart));
+          updateAllButtons();
+        }
+        </script>
+              {% endblock %}

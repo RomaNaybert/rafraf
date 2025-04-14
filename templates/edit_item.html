@@ -1,0 +1,305 @@
+{% extends "profile_panel.html" %}
+<link rel="stylesheet" href="{{ url_for('static', filename='create_item.css') }}">
+
+
+{% block profile_page %}
+<style>
+:root {
+  --black: #000000;
+  --white: #FFFFFF;
+  --gray: #949597;
+  --light-gray: #CACCCB;
+  --magenta: #BC2649;
+}
+
+.form-wrapper {
+  width: calc(100% - 380px);
+  margin: 40px 40px 60px 300px;
+  background-color: var(--light-gray);
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 40px 50px;
+  box-sizing: border-box;
+}
+
+h2 {
+  font-size: 32px;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: var(--black);
+  background-color: var(--white);
+  border: 3px solid var(--black);
+  outline: 3px solid var(--white);
+  box-shadow: 6px 6px 0 var(--magenta);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+form#item-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.form-group {
+  background-color: var(--white);
+  padding: 25px;
+  border-radius: 20px;
+  border: 3px solid var(--black);
+  outline: 3px solid var(--white);
+  box-shadow: 6px 6px 0 var(--magenta);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group label {
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--black);
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px;
+  font-size: 15px;
+  border: 2px solid var(--black);
+  border-radius: 10px;
+  background-color: var(--light-gray);
+  box-shadow: 4px 4px 0 var(--magenta);
+  resize: vertical;
+}
+
+.form-group textarea {
+  min-height: 120px;
+}
+
+.image-gallery {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.image-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 2px solid var(--black);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 var(--magenta);
+  transition: transform 0.3s ease;
+}
+
+.image-item img:hover {
+  transform: scale(1.1) rotate(1deg);
+}
+
+button {
+  padding: 14px 24px;
+  font-weight: bold;
+  border: 2px solid var(--white);
+  outline: 3px solid var(--black);
+  border-radius: 12px;
+  background-color: var(--black);
+  color: var(--white);
+  box-shadow: 5px 5px 0 var(--magenta);
+  cursor: pointer;
+  transition: 0.3s ease;
+  max-width: 250px;
+}
+
+button:hover {
+  background-color: var(--white);
+  color: var(--black);
+  transform: translate(-2px, -2px);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 999;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: var(--white);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 6px 6px 0 var(--magenta);
+  max-width: 700px;
+  width: 90%;
+}
+
+.modal .close {
+  font-size: 22px;
+  float: right;
+  cursor: pointer;
+}
+</style>
+
+<div class="form-wrapper">
+  <h2>Редактирование товара</h2>
+  <div id="default-values" data-id="{{ default_values.id }}" style="display: none;"></div>
+  <form id="item-form" enctype="multipart/form-data">
+      <div class="form-group">
+          <label for="category">Выбор категории:</label>
+          <select id="category" name="category" required>
+              <option value="" disabled {% if not default_values.category %}selected{% endif %}>Категория</option>
+              <option value="top" {% if default_values.category == 'top' %}selected{% endif %}>Верхняя одежда</option>
+              <option value="bottom" {% if default_values.category == 'bottom' %}selected{% endif %}>Нижняя одежда</option>
+              <option value="shoes" {% if default_values.category == 'shoes' %}selected{% endif %}>Обувь</option>
+              <option value="accessories" {% if default_values.category == 'accessories' %}selected{% endif %}>Аксессуары</option>
+          </select>
+      </div>
+      <div class="form-group">
+          <label for="product-name">Название товара</label>
+          <input type="text" id="product-name" name="product-name" value="{{ default_values.product_name }}" required>
+      </div>
+      <div class="form-group">
+          <label for="product-images">Редактировать изображения</label>
+          <button type="button" id="edit-images">Редактировать</button>
+          <div class="image-gallery">
+              {% for image in default_values.product_images %}
+              <div class="image-item">
+                  <img src="{{ url_for('static', filename=image) }}" alt="Изображение товара">
+              </div>
+              {% endfor %}
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="product-description">Описание товара</label>
+          <textarea id="product-description" name="product-description" required>{{ default_values.product_description }}</textarea>
+      </div>
+      <div class="form-group">
+          <label for="product-price">Цена товара (₽)</label>
+          <input type="number" id="product-price" name="product-price" value="{{ default_values.product_price }}" step="0.01" required>
+      </div>
+      <div class="form-group">
+          <label for="product-quantity">Количество единиц товара</label>
+          <input type="number" id="product-quantity" name="product-quantity" value="{{ default_values.product_quantity }}" required>
+      </div>
+      <div class="form-group">
+          <button type="button" id="change-item-button">Изменить товар</button>
+      </div>
+      <div class="form-group">
+          <button type="button" id="delete-item-button">Удалить товар</button>
+      </div>
+  </form>
+</div>
+
+<!-- Модальные окна и подключение JS -->
+<div id="imageEditModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Редактировать изображения</h2>
+    <div class="image-gallery">
+      {% for image in default_values.product_images %}
+        <div class="image-item">
+          <img src="{{ url_for('static', filename=image) }}" alt="Изображение товара">
+        </div>
+      {% endfor %}
+    </div>
+    <input type="file" id="upload-images" multiple>
+  </div>
+</div>
+
+<div id="modelGenerateModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>3D модель товара</h2>
+    <div id="modelGenerateModalContent">
+      <canvas id="modelCanvas"></canvas>
+      <button type="button" id="mGM"></button>
+    </div>
+  </div>
+</div>
+
+<div id="createModelModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Создание модели товара</h2>
+    <div id="createModelModalContent">
+      <p>Выберите фотографию и нажмите "Создать модель".</p>
+      <div class="image-gallery">
+        {% for image in default_values.product_images %}
+          <div class="image-item">
+            <img src="{{ url_for('static', filename=image) }}" alt="Изображение товара">
+          </div>
+        {% endfor %}
+      </div>
+      <button type="button" id="createModelButton">Создать модель</button>
+      <div id="loadingSpinner" class="spinner hidden">Loading...</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+<script src="{{ url_for('static', filename='create_item.js') }}"></script>
+<script>
+document.getElementById('change-item-button').addEventListener('click', function () {
+  const formData = new FormData(document.getElementById('item-form'));
+  formData.append('item_id', document.getElementById('default-values').dataset.id);
+
+  fetch('/change_item', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert('Товар обновлен!');
+      window.location.href = '/items';
+    } else {
+      alert('Ошибка при изменении товара');
+    }
+  });
+});
+  
+document.getElementById('delete-item-button').addEventListener('click', function () {
+  const id = document.getElementById('default-values').dataset.id;
+  if (confirm('Удалить товар?')) {
+    fetch('/delete_item', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ item_id: id })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert('Удалено!');
+        window.location.href = '/items';
+      } else {
+        alert('Ошибка при удалении товара');
+      }
+    });
+  }
+});
+  
+    // Если ты хочешь просто открыть модалку 3D-модели:
+    document.getElementById('generate-item-model').addEventListener('click', function () {
+      document.getElementById('modelGenerateModal').style.display = 'flex';
+    });
+  
+    // Закрытие всех модалок
+    document.querySelectorAll('.modal .close').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.closest('.modal').style.display = 'none';
+      });
+    });
+  </script>
+{% endblock %}

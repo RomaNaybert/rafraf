@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Page</title>
+    <link rel="stylesheet" href="../static/category.css">
+</head>
+<body>
+    <header>
+        <div class="burger-menu">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+        <div>Интернет-магазин</div>
+        <button>Войти/Зарегистрироваться</button>
+    </header>
+    <div class="banner"></div>
+    <div class="products">
+        {% for item in products %}
+        <div class="product">
+            <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.name }}">
+            <h2>{{ item.name }}</h2>
+            <p>{{ item.description }}</p>
+            <p>{{ item.price }} руб.</p>
+            <button>Добавить в корзину</button>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="footer">
+        &copy; 2023 Интернет-магазин
+    </div>
+</body>
+</html>

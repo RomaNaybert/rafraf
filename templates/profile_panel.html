@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='profile_panel.css') }}">
+
+<style>
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: var(--light-gray);
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+}
+
+    :root {
+  --black: #000000;
+  --white: #FFFFFF;
+  --gray: #949597;
+  --light-gray: #CACCCB;
+  --magenta: #BC2649;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch; /* раньше было center */
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+
+.sidebar {
+  position: fixed;
+  top: 220px; /* отступ от шапки */
+  bottom: 220px; /* отступ от футера */
+  left: 0;
+  width: 240px;
+  background-color: var(--white);
+  border-left: none;
+  border-top: none;
+  border-right: 3px solid var(--black); /* только правая обводка */
+  border-bottom: 3px solid var(--black); /* только нижняя */
+  outline: none; /* убрали лишнее */
+  box-shadow: 6px 6px 0 var(--magenta); /* тень вправо и вниз */
+  border-radius: 0 16px 16px 0;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin-bottom: 20px;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: var(--black);
+  font-weight: bold;
+  font-size: 16px;
+  display: inline-block;
+  padding: 10px 15px;
+  border: 2px solid var(--black);
+  background-color: var(--white);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.sidebar a:hover {
+  background-color: var(--black);
+  color: var(--white);
+  box-shadow: 4px 4px 0 var(--magenta);
+  transform: translate(-2px, -2px);
+}
+
+.dropdown-menu {
+  display: none;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.dropdown-menu select {
+  width: 100%;
+  padding: 12px;
+  border: 3px solid var(--black);
+  border-radius: 10px;
+  background-color: var(--white);
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 4px 4px 0 var(--magenta);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+}
+
+.dropdown-menu select:focus {
+  background-color: var(--light-gray);
+  box-shadow: 6px 6px 0 var(--black);
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .dropdown-menu {
+    display: block;
+  }
+
+  .content {
+    flex-direction: column;
+    padding: 20px;
+  }
+}
+
+.profile-card-container {
+    width: 100%; /* убираем ограничения */
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+
+.profile-card {
+  background-color: var(--white);
+  border: 3px solid var(--black);
+  outline: 3px solid var(--white);
+  box-shadow: 6px 6px 0 var(--magenta);
+  border-radius: 20px;
+  padding: 30px;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.profile-title {
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 30px;
+  text-align: center;
+  color: var(--black);
+  text-transform: uppercase;
+}
+
+.profile-detail {
+  font-size: 18px;
+  margin-bottom: 15px;
+  padding: 12px 18px;
+  border: 2px solid var(--black);
+  background-color: var(--light-gray);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 var(--magenta);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.label {
+  font-weight: bold;
+  min-width: 120px;
+  color: var(--black);
+}
+
+/* Анимация появления */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Активный пункт меню */
+.sidebar a.active {
+  background-color: var(--black) !important;
+  color: var(--white) !important;
+  box-shadow: 4px 4px 0 var(--magenta) !important;
+  border-color: var(--magenta) !important;
+}
+</style>
+
+<div class="content">
+    <!-- Выпадающий список для мобильных устройств -->
+    <div class="dropdown-menu">
+        <select id="category-select" onchange="navigateToCategory()">
+            <option value="" disabled selected>Меню</option>
+            {% if user_type == 'buyer' %}
+            <option value="profile">Моя информация</option>
+            <option value="avatar">Мой аватар</option>
+            <option value="order_history">История заказов</option>
+            <option value="#">Настройки</option>
+            <option value="#" class="logout-link">Выйти</option>
+            {% elif user_type == 'seller' %}
+            <option value="profile">Моя информация</option>
+            <option value="items">Мои товары</option>
+            <option value="#">Продажи</option>
+            <option value="#">Настройки</option>
+            <option value="#" class="logout-link">Выйти</option>
+            {% endif %}
+        </select>
+    </div>
+
+    <!-- Сайдбар для десктопных устройств -->
+    <div class="sidebar">
+        {% if user_type == 'buyer' %}
+        <ul>
+            <li><a href="/profile" class="{% if request.path == '/profile' %}active{% endif %}">Моя информация</a></li>
+            <li><a href="avatar" id="avatar">Мой аватар</a></li>
+            <li><a href="/order_history" class="{% if request.path == '/order_history' %}active{% endif %}">История заказов</a></li>
+            <li><a href="#">Настройки</a></li>
+            <li><a href="#" class="logout-link">Выйти</a></li>
+        </ul>
+        {% elif user_type == 'seller' %}
+        <ul>
+            <li><a href="/profile" class="{% if request.path == '/profile' %}active{% endif %}">Моя информация</a></li>
+            <li><a href="/items" class="{% if request.path == '/items' %}active{% endif %}">Мои товары</a></li>
+            <li><a href="#">Продажи</a></li>
+            <li><a href="#">Настройки</a></li>
+            <li><a href="#" class="logout-link">Выйти</a></li>
+        </ul>
+        {% endif %}
+    </div>
+
+    <div class="main-content">
+        <div class="profile-card-container">
+            {% block profile_page %}
+            <div class="profile-card animate-in">
+              <h1 class="profile-title">Добро пожаловать, {{ user_data.name }} {{ user_data.surname }}!</h1>
+              <div class="profile-detail"><span class="label">Email:</span> {{ user_data.email }}</div>
+              <div class="profile-detail"><span class="label">Телефон:</span> {{ user_data.phone }}</div>
+            </div>
+            {% endblock %}
+        </div>
+      </div>
+</div>
+
+<script>
+    function navigateToCategory() {
+        const select = document.getElementById('category-select');
+        const selectedValue = select.value;
+        if (selectedValue) {
+            window.location.href = selectedValue;
+        }
+    }
+
+    document.querySelectorAll('.logout-link').forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();  // Предотвращаем стандартное поведение ссылки
+            fetch('/logout')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/';  // Перенаправляем на главную страницу после выхода
+                    } else {
+                        alert('Ошибка при выходе из системы.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Ошибка при выходе из системы.');
+                });
+        });
+    });
+</script>
+{% endblock %}

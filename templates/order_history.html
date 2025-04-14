@@ -1,0 +1,157 @@
+{% extends "profile_panel.html" %}
+{% block profile_page %}
+
+<style>
+.orders-wrapper {
+  margin-left: 300px;
+  padding: 40px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.order-card {
+  border: 3px solid var(--black);
+  background-color: var(--white);
+  box-shadow: 6px 6px 0 var(--magenta);
+  border-radius: 20px;
+  padding: 30px;
+}
+
+.order-header {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 15px;
+}
+
+.order-info {
+  font-size: 16px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.order-items {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.order-item {
+  border: 2px solid var(--black);
+  border-radius: 12px;
+  background: var(--light-gray);
+  padding: 15px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  box-shadow: 3px 3px 0 var(--black);
+}
+
+.order-item img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border: 2px solid var(--black);
+  border-radius: 10px;
+  background: white;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.item-title {
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.order-total {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 20px;
+}
+
+.repeat-btn {
+  margin-top: 20px;
+  padding: 10px 18px;
+  font-weight: bold;
+  font-size: 15px;
+  background: var(--black);
+  color: white;
+  border: 2px solid var(--magenta);
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 var(--magenta);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.repeat-btn:hover {
+  background: var(--magenta);
+  color: var(--white);
+}
+</style>
+
+<div class="orders-wrapper">
+  <h1 class="profile-title">История заказов</h1>
+
+  {% if orders %}
+    {% for order in orders %}
+      <div class="order-card">
+        <div class="order-header">📦 Заказ #{{ order.id }}</div>
+        <div class="order-info">🕒 {{ order.time[:10] }} {{ order.time[11:16] }}</div>
+        <div class="order-info">📍 Адрес: {{ order.address }}</div>
+
+        <div class="order-items">
+          {% for item in order.cart %}
+            <div class="order-item">
+              <img src="{{ item.thumbnail }}" alt="product">
+              <div class="item-info">
+                <div class="item-title">{{ item.title or "Без названия" }}</div>
+                <div>Размер: {{ item.size or "—" }}</div>
+                <div>Кол-во: {{ item.quantity }}</div>
+                <div>Цена: ₽{{ "%.2f"|format(item.price) }}</div>
+                <div><b>Итого: ₽{{ "%.2f"|format(item.total) }}</b></div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="order-total">💳 Сумма заказа: <b>₽{{ "%.2f"|format(order.total_sum) }}</b></div>
+
+        <button class="repeat-btn" onclick='repeatOrder({{ order.cart|tojson }})'>🔁 Повторить заказ</button>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="no-orders">📭 У вас пока нет заказов</div>
+  {% endif %}
+</div>
+
+<script>
+  function repeatOrder(cartItems) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cartItems.forEach(item => {
+      const existing = cart.find(i => i.id === item.id && i.size === item.size);
+      if (existing) {
+        existing.quantity += item.quantity;
+      } else {
+        cart.push({
+  id: product.id,
+  title: product.translated_title || product.title,
+  price: product.price,
+  size: selectedSize,
+  quantity: 1
+});
+      }
+    });
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    alert("🛍 Товары добавлены в корзину");
+  }
+</script>
+
+{% endblock %}

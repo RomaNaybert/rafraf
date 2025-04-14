@@ -1,0 +1,46 @@
+:root {
+    --base-height: 300px;
+    --height-increment: 0.5; /* Коэффициент увеличения высоты */
+    --max-height: 400px; /* Максимальная высота */
+    --max-width: 1200px; /* Максимальная ширина */
+}
+
+#model-container {
+    width: 80%;
+    height: var(--base-height);
+    border-radius: 10px;
+    background-color: #ccc;
+    margin: 20px auto; /* Центрируем контейнер по горизонтали */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Добавляем position: relative для контейнера */
+    max-width: var(--max-width); /* Ограничиваем максимальную ширину */
+}
+
+#modelCanvas {
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px; /* Добавляем отступ сверху для кнопок */
+}
+
+/* Медиазапрос для экранов шириной более 900 пикселей */
+@media (min-width: 900px) {
+    #model-container {
+        height: min(var(--max-height), calc(var(--base-height) + (100vw - 900px) * var(--height-increment)));
+    }
+}
+
+/* Медиазапрос для экранов шириной более 1200 пикселей */
+@media (min-width: 1200px) {
+    #model-container {
+        width: 860px; /* Увеличиваем высоту контейнера */
+    }
+}

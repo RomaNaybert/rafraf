@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="../static/account.css">
+</head>
+<body>
+    <header>
+        Личный кабинет
+        <button id="back-button" onclick="goBack()">Назад</button>
+    </header>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="#">Моя информация</a></li>
+                <li><a href="avatar" id="avatar">Мой аватар</a></li>
+                <li><a href="#">История заказов</a></li>
+                <li><a href="#">Настройки</a></li>
+                <li><a href="#" id="logout-link">Выйти</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h1>Добро пожаловать, {{ user_data.name }} {{ user_data.surname }}!</h1>
+            <p><strong>Email:</strong> {{ user_data.email }}</p>
+            <p><strong>Номер телефона:</strong> {{ user_data.phone }}</p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('logout-link').addEventListener('click', function(event) {
+            event.preventDefault();  // Предотвращаем стандартное поведение ссылки
+            fetch('/logout')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/';  // Перенаправляем на главную страницу после выхода
+                    } else {
+                        alert('Ошибка при выходе из системы.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Ошибка при выходе из системы.');
+                });
+        });
+        function handleAuthButton() {
+            const button = document.getElementById('auth-button');
+            if (button.innerText === 'Войти/Зарегистрироваться') {
+                window.location.href = "/register";
+            } else {
+                window.location.href = "/profile";  // Переход в личный кабинет
+            }
+        }
+
+        function goBack() {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

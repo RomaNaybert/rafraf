@@ -1,0 +1,19 @@
+{
+  "id": 1743090636,
+  "name": "чсм ",
+  "address": "чем ",
+  "email": "sbzlatvm@mail.ru",
+  "cart": [
+    {
+      "id": "84",
+      "quantity": 1,
+      "size": "XS"
+    },
+    {
+      "id": 84,
+      "size": "XS",
+      "quantity": 1
+    }
+  ],
+  "time": "2025-03-27T20:50:36.551127"
+}

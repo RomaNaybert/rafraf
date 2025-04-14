@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- ВНЕ серого блока: заголовок -->
+<section class="atelier-header-section">
+  <h1 class="title">Ателье</h1>
+</section>
+
+<!-- СЕКЦИЯ: примеры работ -->
+<section class="atelier-section">
+  <div class="atelier-container">
+    <div class="atelier-wrapper">
+      <div class="gallery-preview">
+        <h2 class="subtitle">Примеры пошитой одежды</h2>
+        <div class="gallery-grid">
+          <div class="gallery-card">
+            <img src="https://basket-01.wbbasket.ru/vol131/part13143/13143853/images/big/5.webp" alt="Футболка">
+            <p class="gallery-text">Футболка из хлопка</p>
+          </div>
+          <div class="gallery-card">
+            <img src="https://royalfashion-shop.ru/image/cache/catalog/halat1coat_6%20(1)2020-1000x1500.jpg" alt="Пальто">
+            <p class="gallery-text">Пальто из кашемира</p>
+          </div>
+          <div class="gallery-card">
+            <img src="https://shop-cdn1-2.vigbo.tech/shops/134942/products/21855077/images/3-90073aecd231a69067f9417f675633fe.jpg" alt="Платье">
+            <p class="gallery-text">Платье из шёлка</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- СЕКЦИЯ: как снять мерки -->
+<section class="atelier-section">
+  <div class="atelier-container">
+    <div class="atelier-wrapper">
+      <h2 class="subtitle">Как правильно снять мерки</h2>
+      <div class="measurements-grid">
+        <div class="measure-card">
+          <img src="https://cdn-icons-png.flaticon.com/128/13943/13943823.png" alt="Обхват шеи">
+          <p><strong>Обхват шеи</strong><br>Измерьте окружность основания шеи, плотно, но не туго.</p>
+        </div>
+        <div class="measure-card">
+          <img src="https://cdn-icons-png.flaticon.com/128/13943/13943811.png" alt="Обхват груди">
+          <p><strong>Обхват груди</strong><br>Измерьте по самой выступающей части груди и лопаток.</p>
+        </div>
+        <div class="measure-card">
+          <img src="https://cdn-icons-png.flaticon.com/128/13943/13943816.png" alt="Обхват талии">
+          <p><strong>Обхват талии</strong><br>Измерьте по самой узкой части талии, не втягивая живот.</p>
+        </div>
+        <div class="measure-card">
+          <img src="https://cdn-icons-png.flaticon.com/128/13943/13943805.png" alt="Обхват бедер">
+          <p><strong>Обхват бёдер</strong><br>Измерьте по самой широкой части бёдер, стоя прямо.</p>
+        </div>
+        <div class="measure-card">
+          <img src="https://cdn-icons-png.flaticon.com/128/13943/13943808.png" alt="Рост">
+          <p><strong>Рост</strong><br>Измерьте от макушки до пяток без обуви, стоя у стены.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- СЕКЦИЯ: форма заказа -->
+<section class="atelier-section">
+  <div class="atelier-container">
+    <div class="atelier-wrapper">
+      <form method="post" action="/submit_order" class="atelier-form" id="orderForm">
+        <h2 class="subtitle">Оформление индивидуального заказа</h2>
+        <div class="form-group">
+          <label for="category">Категория товара:</label>
+          <select name="category" id="category" required>
+            <option value="">Выберите категорию</option>
+            <option>Рубашка</option>
+            <option>Футболка</option>
+            <option>Платье</option>
+            <option>Юбка</option>
+            <option>Брюки</option>
+            <option>Пиджак</option>
+            <option>Куртка</option>
+            <option>Худи</option>
+            <option>Пальто</option>
+            <option>Комбинезон</option>
+          </select>
+        </div>
+
+        <div class="form-group grid-two">
+          <input type="number" name="neck" placeholder="Обхват шеи (см)" min="20" max="70" required>
+          <input type="number" name="chest" placeholder="Обхват груди (см)" min="50" max="200" required>
+          <input type="number" name="waist" placeholder="Обхват талии (см)" min="40" max="200" required>
+          <input type="number" name="hips" placeholder="Обхват бёдер (см)" min="40" max="200" required>
+          <input type="number" name="height" placeholder="Рост (см)" min="100" max="250" required>
+        </div>
+
+        <div class="form-group">
+          <label for="fabric">Ткань:</label>
+          <select name="fabric" id="fabric" required>
+            <option value="">Выберите ткань</option>
+            <option>Полиэстер</option>
+            <option>Шёлк</option>
+            <option>Флис</option>
+            <option>Вельвет</option>
+            <option>Вискоза</option>
+            <option>Хлопок</option>
+            <option>Кашемир</option>
+            <option>Лён</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="comment">Комментарий к заказу:</label>
+          <textarea name="comment" id="comment" rows="4" placeholder="Напишите, что важно учесть..." required></textarea>
+        </div>
+
+        <button type="submit" class="order-button">Заказать</button>
+      </form>
+    </div>
+  </div>
+</section>
+<section class="atelier-section">
+  <div class="atelier-container">
+    <div class="atelier-wrapper">
+      <h2 class="subtitle">Отзывы клиентов</h2>
+      <div class="review-grid">
+        <div class="review-card">
+          <p class="review-text">«Очень довольна своим заказом! Все село идеально, ткань шикарная. Спасибо!»</p>
+          <p class="review-author">— Анна К.</p>
+        </div>
+        <div class="review-card">
+          <p class="review-text">«Ателье Арсения — настоящая находка. Учли все мои пожелания, пошив на высоте.»</p>
+          <p class="review-author">— Михаил П.</p>
+        </div>
+        <div class="review-card">
+          <p class="review-text">«Оформила заказ через сайт, получила платье мечты! Спасибо за индивидуальный подход!»</p>
+          <p class="review-author">— Дарья Л.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .gallery-text {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--black);
+  margin-top: 0.5rem;
+  text-align: center;
+}
+  .atelier-header-section {
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+    background: var(--white);
+  }
+
+  .title {
+    font-size: 3.2rem;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .atelier-section {
+    background: var(--white);
+    padding: 3rem 0;
+    width: 100%;
+  }
+
+  .atelier-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .atelier-wrapper {
+    background-color: var(--light-gray);
+    border-radius: 2rem;
+    box-shadow: 6px 6px 0 var(--magenta);
+    padding: 2rem;
+  }
+
+  .gallery-preview {
+    margin-bottom: 3rem;
+  }
+
+  .gallery-grid {
+    display: flex;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  .gallery-card {
+    background: var(--white);
+    border: 2px solid var(--black);
+    box-shadow: 4px 4px 0 var(--magenta);
+    padding: 1rem;
+    text-align: center;
+    border-radius: 1rem;
+    display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%; /* обязательно */
+  max-width: 300px;
+  flex: 1;
+  }
+
+  .gallery-card img {
+    width: 100%;
+    height: 600px;
+    border-radius: 1rem;
+    margin-bottom: 0.5rem;
+    object-fit: cover;
+  }
+
+  .measurements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .measure-card {
+    background: var(--white);
+    padding: 1rem;
+    border: 2px solid var(--black);
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 4px 4px 0 var(--magenta);
+  }
+
+  .measure-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 0.8rem;
+  }
+
+  .atelier-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .grid-two {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 1rem;
+    border: 2px solid var(--black);
+    border-radius: 1rem;
+    font-size: 1rem;
+    background: var(--white);
+  }
+
+  .order-button {
+    align-self: center;
+    padding: 1rem 2.5rem;
+    font-size: 1.4rem;
+    font-weight: bold;
+    border: 2px solid var(--black);
+    border-radius: 2rem;
+    background: var(--magenta);
+    color: var(--white);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .order-button:hover {
+    transform: scale(1.05);
+    box-shadow: 6px 6px 0 var(--black);
+  }
+
+  @media (max-width: 768px) {
+    .atelier-container {
+      padding: 0 20px;
+    }
+    .title {
+      font-size: 2.4rem;
+    }
+  }
+  .review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .review-card {
+    background: var(--white);
+    border: 2px solid var(--black);
+    box-shadow: 4px 4px 0 var(--magenta);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    font-style: italic;
+  }
+
+  .review-text {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .review-author {
+    font-weight: bold;
+    font-style: normal;
+    text-align: right;
+  }
+</style>
+
+<div id="thankYouPopup" style="
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 10000;
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+">
+  <div style="background: white; border: 4px solid black; padding: 40px; box-shadow: 10px 10px 0 black; max-width: 90%; text-align: center;">
+    <h2 style="margin-bottom: 20px;">Спасибо за заказ!</h2>
+    <p style="margin-bottom: 30px;">Мы свяжемся с вами в ближайшее время.</p>
+    <button onclick="window.location.href='/'" class="brutalist-button">Хорошо</button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const orderForm = document.getElementById('orderForm');
+    const popup = document.getElementById('thankYouPopup');
+
+    if (orderForm && popup) {
+      orderForm.addEventListener('submit', function (e) {
+        e.preventDefault(); // блокируем отправку
+        popup.style.display = 'flex'; // показываем попап
+      });
+    }
+  });
+</script>
+
+{% endblock %}

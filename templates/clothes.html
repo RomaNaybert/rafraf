@@ -1,0 +1,546 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .catalog-wrapper {
+    display: flex;
+    padding: 40px;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  @media (max-width: 768px) {
+    .catalog-wrapper {
+      flex-direction: column-reverse;
+      padding: 12px;
+      gap: 10px;
+      margin: 0;
+      box-sizing: border-box;
+      width: 100%;
+    }
+  }
+  
+  .card-select {
+    width: 100%;
+    padding: 6px;
+    border: 2px solid black;
+    background-color: white;
+    font-weight: bold;
+    box-shadow: 3px 3px 0 black;
+    border-radius: 5px;
+    margin-top: 8px;
+    font-family: Montserrat, sans-serif;
+  }
+
+  .card-select:focus {
+    outline: none;
+    border-color: var(--main-focus);
+    box-shadow: 3px 3px 0 var(--main-focus);
+  }
+
+  .card.flipped {
+    transform: rotateY(180deg);
+  }
+
+  .filter-panel {
+    width: 220px;
+    border: 3px solid black;
+    box-shadow: 6px 6px 0 black;
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: Montserrat, sans-serif;
+    margin-top: 60px;
+  }
+  
+  @media (max-width: 768px) {
+    .filter-panel {
+      width: calc(100% - 24px) !important;
+      margin: 0 auto 20px auto;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+  }
+
+  .filter-panel h2 {
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 20px;
+  }
+
+  .filter-block {
+    margin-bottom: 20px;
+  }
+
+  .filter-block h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .filter-block ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .filter-block ul li {
+    margin-bottom: 6px;
+  }
+
+  .filter-block ul li a {
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+    border: 1px solid black;
+    padding: 4px 8px;
+    display: inline-block;
+    box-shadow: 3px 3px 0 black;
+    transition: 0.2s;
+  }
+
+  .filter-block ul li a:hover {
+    background-color: #eee;
+    transform: translate(-2px, -2px);
+  }
+
+  .filter-block input[type="range"] {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  .filter-block select {
+    width: 100%;
+    padding: 6px;
+    border: 2px solid black;
+    background-color: white;
+    font-weight: bold;
+    box-shadow: 3px 3px 0 black;
+  }
+
+  .filter-block button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px;
+    font-weight: bold;
+    border: 2px solid black;
+    background-color: white;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 black;
+    transition: 0.2s ease;
+  }
+
+  .filter-block button:hover {
+    background-color: #f5f5f5;
+    transform: translateY(-2px);
+  }
+
+  .catalog-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1300px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+  }
+  
+  @media (max-width: 768px) {
+    .products-grid {
+      grid-template-columns: repeat(2, 1fr);
+      padding: 0 12px;
+      width: 100%;
+      box-sizing: border-box;
+      gap: 15px;
+    }
+  }
+
+  .card {
+    --font-color: #323232;
+    --font-color-sub: #666;
+    --bg-color: #fff;
+    --main-color: #323232;
+    --main-focus: #BC2649;
+    background: var(--bg-color);
+    border: 2px solid var(--main-color);
+    box-shadow: 4px 4px var(--main-color);
+    border-radius: 5px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  @media (max-width: 768px) {
+    .card {
+      padding: 8px;
+      border-width: 1px;
+      margin: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  .card-img img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+  }
+  
+  @media (max-width: 768px) {
+    .card-img img {
+      height: 90px;
+    }
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 10px 0;
+    color: var(--font-color);
+  }
+  
+  @media (max-width: 768px) {
+    .card-title {
+      font-size: 11px;
+      margin: 4px 0;
+    }
+  }
+
+  .card-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--font-color-sub);
+  }
+  
+  @media (max-width: 768px) {
+    .card-price {
+      font-size: 11px;
+    }
+  }
+
+  .card-btn {
+    margin-top: 10px;
+    padding: 10px;
+    background: var(--bg-color);
+    border: 2px solid var(--main-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: bold;
+  }
+  
+  @media (max-width: 768px) {
+    .card-btn {
+      padding: 4px;
+      font-size: 10px;
+      margin-top: 4px;
+      border-width: 1px;
+    }
+    
+    .card-select {
+      font-size: 10px;
+      padding: 2px;
+    }
+    
+    label {
+      font-size: 10px;
+    }
+  }
+
+  .card-btn:hover {
+    border-color: var(--main-focus);
+    color: var(--main-focus);
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 40px;
+  }
+  
+  @media (max-width: 768px) {
+    .pagination {
+      gap: 6px;
+      margin-top: 15px;
+      padding: 0 10px;
+    }
+  }
+
+  .pagination a {
+    text-decoration: none;
+    color: var(--black);
+    border: 2px solid var(--black);
+    padding: 6px 14px;
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--black);
+    font-weight: bold;
+    background-color: white;
+    transition: 0.2s ease;
+  }
+  
+  @media (max-width: 768px) {
+    .pagination a {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-width: 1px;
+      box-shadow: 2px 2px 0 var(--black);
+    }
+  }
+
+  .flying-img {
+    position: fixed;
+    z-index: 1000;
+    transition: transform 0.7s ease-in-out, opacity 0.7s;
+    pointer-events: none;
+  }
+
+  .pagination a.active {
+    background-color: var(--black);
+    color: white;
+  }
+
+  .pagination a:hover {
+    transform: translateY(-2px);
+    box-shadow: 2px 2px 0 var(--black);
+  }
+
+  .no-products {
+    margin-top: 50px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--main-color);
+    text-align: center;
+  }
+  
+  @media (max-width: 768px) {
+    .no-products {
+      font-size: 12px;
+      margin-top: 15px;
+    }
+  }
+</style>
+
+<div class="catalog-wrapper">
+  <aside class="filter-panel">
+    <h2>Фильтры</h2>
+    <form id="filterForm" method="get" action="{{ url_for('clothes') }}">
+        <div class="filter-block">
+          <h3>Категория</h3>
+          <select name="category">
+            <option value="all" {% if request.args.get('category') == 'all' %}selected{% endif %}>Все</option>
+            <option value="mens" {% if request.args.get('category') == 'mens' %}selected{% endif %}>Мужское</option>
+            <option value="womens" {% if request.args.get('category') == 'womens' %}selected{% endif %}>Женское</option>
+            <option value="shoes" {% if request.args.get('category') == 'shoes' %}selected{% endif %}>Обувь</option>
+            <option value="glasses" {% if request.args.get('category') == 'glasses' %}selected{% endif %}>Очки</option>
+            <option value="watches" {% if request.args.get('category') == 'watches' %}selected{% endif %}>Часы</option>
+            <option value="bags" {% if request.args.get('category') == 'bags' %}selected{% endif %}>Сумки</option>
+          </select>
+        </div>
+
+      <div class="filter-block">
+        <h3>Макс. цена</h3>
+        <input type="range" name="max_price" min="0" max="1000" value="{{ request.args.get('max_price', 1000) }}" step="10"
+               oninput="document.getElementById('priceValue').innerText = this.value + ' ₽';">
+        <div id="priceValue">{{ request.args.get('max_price', 1000) }} ₽</div>
+      </div>
+
+      <div class="filter-block">
+        <h3>Сортировка</h3>
+        <select name="sort">
+          <option value="default" {% if request.args.get('sort') == 'default' %}selected{% endif %}>По умолчанию</option>
+          <option value="price_asc" {% if request.args.get('sort') == 'price_asc' %}selected{% endif %}>Цена ↑</option>
+          <option value="price_desc" {% if request.args.get('sort') == 'price_desc' %}selected{% endif %}>Цена ↓</option>
+        </select>
+      </div>
+
+      <div class="filter-block">
+        <button type="submit">Применить фильтры</button>
+      </div>
+    </form>
+  </aside>
+
+  <div class="catalog-container">
+    <!-- <h1 style="margin-bottom: 30px;">Каталог товаров</h1> -->
+
+    {% if products|length == 0 %}
+      <div class="no-products">❌ Товары по заданным фильтрам не найдены.</div>
+    {% else %}
+    <div class="products-grid">
+      {% for product in products %}
+      
+        <div class="card">
+          <div class="card-img">
+            <img src="{{ product.thumbnail }}" alt="{{ product.title }}">
+          </div>
+          <div class="card-title">{{ product.translated_title }}</div>
+          <div class="card-price">{{ product.price }} ₽</div>
+
+          {% set title_lower = product.title.lower() %}
+          {% if 'shoes' in title_lower or 'sneaker' in title_lower or 'nike' in title_lower or 'rider' in title_lower or 'slipper' in title_lower%}
+            <label style="margin-top: 10px; font-weight: bold;">Размер обуви:
+              <select class="card-select">
+                {% for size in [36, 37, 38, 39, 40, 41, 42, 43, 44] %}
+                  <option value="{{ size }}">{{ size }}</option>
+                {% endfor %}
+              </select>
+            </label>
+          {% elif 'watch' in title_lower %}
+            <label style="margin-top: 10px; font-weight: bold;">Размер ремешка:
+              <select class="card-select">
+                {% for size in ['S', 'M', 'L'] %}
+                  <option value="{{ size }}">{{ size }}</option>
+                {% endfor %}
+              </select>
+            </label>
+          {% elif 'shirt' in title_lower or 'tshirt' in title_lower or 'jacket' in title_lower or 'coat' in title_lower or 'dress' in title_lower or 'hoodie' in title_lower or 'clothing' in title_lower or 'suit' in title_lower or 'skirt' in title_lower or 'gown' in title_lower%}
+            <label style="margin-top: 10px; font-weight: bold;">Размер:
+              <select class="card-select">
+                {% for size in ['XS', 'S', 'M', 'L', 'XL'] %}
+                  <option value="{{ size }}">{{ size }}</option>
+                {% endfor %}
+              </select>
+            </label>
+          {% endif %}
+
+          <button class="card-btn add-to-cart-btn" data-id="{{ product.id }}">В корзину</button>
+        </div>
+      {% endfor %}
+    </div>
+
+      <div class="pagination">
+        {% if page > 1 %}
+          <a href="{{ url_for('clothes', page=1, category=category, max_price=max_price, sort=sort) }}">«</a>
+          <a href="{{ url_for('clothes', page=page-1, category=category, max_price=max_price, sort=sort) }}">‹</a>
+        {% endif %}
+
+        {% for p in range(1, total_pages + 1) %}
+          <a href="{{ url_for('clothes', page=p, category=category, max_price=max_price, sort=sort) }}" class="{% if p == page %}active{% endif %}">{{ p }}</a>
+        {% endfor %}
+
+        {% if page < total_pages %}
+          <a href="{{ url_for('clothes', page=page+1, category=category, max_price=max_price, sort=sort) }}">›</a>
+          <a href="{{ url_for('clothes', page=total_pages, category=category, max_price=max_price, sort=sort) }}">»</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function updateCartCount() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const count = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const badge = document.getElementById('cartCountBadge');
+  if (badge) {
+    badge.innerText = count;
+    badge.style.display = count > 0 ? 'inline-block' : 'none';
+  }
+}
+
+  function flyToCart(imgElement) {
+    const cartIcon = document.querySelector('.fa-shopping-cart');
+    const iconRect = cartIcon.getBoundingClientRect();
+    const imgRect = imgElement.getBoundingClientRect();
+
+    const flyingImg = imgElement.cloneNode();
+    flyingImg.classList.add('flying-img');
+    flyingImg.style.top = imgRect.top + 'px';
+    flyingImg.style.left = imgRect.left + 'px';
+    flyingImg.style.width = imgRect.width + 'px';
+    flyingImg.style.height = imgRect.height + 'px';
+
+    document.body.appendChild(flyingImg);
+
+    setTimeout(() => {
+      const targetX = iconRect.left + iconRect.width / 2 - imgRect.width / 2;
+      const targetY = iconRect.top + iconRect.height / 2 - imgRect.height / 2;
+      flyingImg.style.transform = `translate(${targetX - imgRect.left}px, ${targetY - imgRect.top}px) scale(0.2)`;
+      flyingImg.style.opacity = '0';
+    }, 10);
+
+    setTimeout(() => {
+      flyingImg.remove();
+    }, 800);
+  }
+
+  function showMiniCartTemp() {
+    const miniCart = document.getElementById('mini-cart');
+    const miniCartContent = document.getElementById('mini-cart-content');
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    fetch('/api/products')
+      .then(res => res.json())
+      .then(products => {
+        miniCartContent.innerHTML = '';
+        cart.forEach(item => {
+          const product = products.find(p => p.id == item.id);
+          if (!product) return;
+          const el = document.createElement('div');
+          el.innerHTML = `<small>${product.translated_title || product.title}</small> × ${item.quantity}`;
+          miniCartContent.appendChild(el);
+        });
+
+        miniCart.style.display = 'block';
+        setTimeout(() => miniCart.style.opacity = '1', 50);
+
+        setTimeout(() => {
+          miniCart.style.opacity = '0';
+          setTimeout(() => { miniCart.style.display = 'none'; }, 300);
+        }, 3000); // ← 3 секунды
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+  updateCartCount();
+
+  document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const productId = btn.getAttribute('data-id');
+      const card = btn.closest('.card');
+      const img = card.querySelector('img');
+      flyToCart(img);
+
+      const selectedSize = card.querySelector('select')?.value || null;
+
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      // Находим по id и размеру
+      const existing = cart.find(item =>
+        String(item.id) === productId &&
+        (item.size || null) === selectedSize
+      );
+
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({
+  id: product.id,
+  title: product.translated_title || product.title,
+  price: product.price,
+  size: selectedSize,
+  quantity: 1
+});
+      }
+
+      console.log('Сохраняется в localStorage:', cart); // <— Добавь для отладки
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      showMiniCartTemp();
+    });
+  });
+});
+</script>
+
+{% endblock %}
+

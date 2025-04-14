@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .item-page {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 20px;
+        text-align: left;
+    }
+    .item-page img {
+        max-width: 40%;
+        border-radius: 8px;
+        margin-right: 20px;
+    }
+    .item-page .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .item-page h2 {
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
+    .item-page p {
+        font-size: 1.2em;
+        color: #555;
+        margin-bottom: 20px;
+    }
+    .item-page .price {
+        font-size: 1.5em;
+        color: #000;
+        margin-bottom: 20px;
+    }
+    .item-page .actions {
+        margin-top: 20px;
+    }
+    .item-page .actions button {
+        padding: 10px 20px;
+        font-size: 1em;
+        color: #fff;
+        background-color: #000;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .item-page .actions button:hover {
+        background-color: #333;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0,0.4);
+        padding-top: 60px;
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .upload-container {
+        margin-top: 20px;
+    }
+    .upload-container input[type="file"] {
+        display: none;
+    }
+    .upload-container label {
+        padding: 10px 20px;
+        font-size: 1em;
+        color: #fff;
+        background-color: #000;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .upload-container label:hover {
+        background-color: #333;
+    }
+    .uploaded-image {
+        margin-top: 20px;
+        max-width: 300px; /* Adjust the maximum width as needed */
+        max-height: 300px; /* Adjust the maximum height as needed */
+        border-radius: 8px;
+        object-fit: contain; /* Ensure the image maintains its aspect ratio */
+    }
+    .uploaded-image-container {
+        margin-bottom: 10px; /* Add padding below the image */
+    }
+    .fit-button {
+        display: none;
+        padding: 10px 20px;
+        font-size: 1em;
+        color: #fff;
+        background-color: #000;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .fit-button:hover {
+        background-color: #333;
+    }
+    .loading {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+<div class="item-page">
+    <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.name }}">
+    <div class="info">
+        <h2>{{ product.name }}</h2>
+        <p>{{ product.description }}</p>
+        <div class="price">{{ product.price }} руб.</div>
+        <div class="actions">
+            <button>Добавить в корзину</button>
+            <button id="tryOnlineButton">Примерить онлайн</button>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Загрузите свое изображение</p>
+    <div class="upload-container">
+        <input type="file" id="fileInput" accept="image/*">
+        <label for="fileInput" id="uploadLabel">Загрузить изображение</label>
+    </div>
+    <div class="uploaded-image-container" style="display:none;">
+        <img id="uploadedImage" class="uploaded-image">
+    </div>
+    <button class="fit-button" id="fitButton">Примерить</button>
+    <div class="loading" id="loading">Ожидание...</div>
+  </div>
+</div>
+
+<!-- The Result Modal -->
+<div id="resultModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Результат:</p>
+    <img id="resultImage" class="uploaded-image">
+  </div>
+</div>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+    var resultModal = document.getElementById("resultModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("tryOnlineButton");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close");
+
+    // Get the file input element
+    var fileInput = document.getElementById("fileInput");
+
+    // Get the image element
+    var uploadedImage = document.getElementById("uploadedImage");
+
+    // Get the label element
+    var uploadLabel = document.getElementById("uploadLabel");
+
+    // Get the image container element
+    var imageContainer = document.querySelector('.uploaded-image-container');
+
+    // Get the fit button element
+    var fitButton = document.getElementById("fitButton");
+
+    // Get the loading element
+    var loading = document.getElementById("loading");
+
+    // Get the result image element
+    var resultImage = document.getElementById("resultImage");
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    for (var i = 0; i < span.length; i++) {
+        span[i].onclick = function() {
+            modal.style.display = "none";
+            resultModal.style.display = "none";
+            imageContainer.style.display = "none";
+            fileInput.value = "";
+            uploadLabel.textContent = "Загрузить изображение";
+            fitButton.style.display = "none";
+            loading.style.display = "none";
+        }
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal || event.target == resultModal) {
+        modal.style.display = "none";
+        resultModal.style.display = "none";
+        imageContainer.style.display = "none";
+        fileInput.value = "";
+        uploadLabel.textContent = "Загрузить изображение";
+        fitButton.style.display = "none";
+        loading.style.display = "none";
+      }
+    }
+
+    // Handle file input change event
+    fileInput.onchange = function(event) {
+      var file = event.target.files[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedImage.src = e.target.result;
+          imageContainer.style.display = "block";
+          fitButton.style.display = "block";
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Function to send the request to the /fit endpoint
+    fitButton.onclick = function() {
+    if (!fileInput.files[0]) {
+        alert('Пожалуйста, загрузите изображение.');
+        return;
+    }
+    loading.style.display = "block";
+    fitButton.style.display = "none";
+    sendFitRequest(fileInput.files[0], "styles{{ product.image }}");
+}
+
+function sendFitRequest(uploadedImageFile, productImageSrc) {
+    var formData = new FormData();
+    formData.append('uploadedImage', uploadedImageFile);
+    formData.append('productImage', productImageSrc);
+
+    fetch('/fit', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        console.log('Success:', data);
+        // Обработка ответа от сервера
+        loading.style.display = "none";
+        modal.style.display = "none";
+        resultImage.src = data.imageUrl;
+        console.log(data.imageUrl); // Предполагается, что сервер возвращает путь к изображению
+        resultModal.style.display = "block";
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        loading.style.display = "none";
+        fitButton.style.display = "block";
+        alert('Произошла ошибка при обработке изображения. Пожалуйста, попробуйте снова.');
+    });
+}
+
+</script>
+{% endblock %}

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="../static/register.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Регистрация</h1>
+        <form id="registerForm">
+            <input type="text" id="name" placeholder="Имя" required>
+            <input type="text" id="surname" placeholder="Фамилия" required>
+            <input type="date" id="date" required>
+            <div class="gender-options">
+                <h3>Пол</h3>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" id="male" name="gender" value="male" required>
+                        Мужской
+                    </label>
+                    <label>
+                        <input type="radio" id="female" name="gender" value="female" required>
+                        Женский
+                    </label>
+                </div>
+            </div>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="tel" id="phone" placeholder="Номер телефона" required>
+            <select id="role" required>
+                <option value="" disabled selected>Выберите роль</option>
+                <option value="buyer">Покупатель</option>
+                <option value="seller">Продавец</option>
+            </select>
+            <input type="password" id="password" placeholder="Пароль" required>
+            <input type="password" id="repassword" placeholder="Повторите пароль" required>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <a onclick="login()" href="#">Уже есть аккаунт? Войти</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registerForm');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Предотвращаем стандартное поведение формы
+
+                const name = document.getElementById('name').value;
+                const surname = document.getElementById('surname').value;
+                const birth = document.getElementById('date').value;
+                const gender = document.querySelector('input[name="gender"]:checked').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const role = document.getElementById('role').value;
+                const password = document.getElementById('password').value;
+                const repassword = document.getElementById('repassword').value;
+
+                if (password !== repassword) {
+                    alert('Пароли не совпадают. Пожалуйста, попробуйте снова.');
+                    return;
+                }
+
+                fetch('/reg', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        'name': name,
+                        'surname': surname,
+                        'birth': birth,
+                        'gender': gender,
+                        'email': email,
+                        'phone': phone,
+                        'role': role,
+                        'password': password
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/'; // Редирект на главную страницу
+                    } else {
+                        alert('Ошибка при регистрации. Пожалуйста, попробуйте снова.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Произошла ошибка. Пожалуйста, попробуйте снова.');
+                });
+            });
+        });
+
+        function login() {
+            window.location.href = "/login";
+        }
+    </script>
+</body>
+</html>

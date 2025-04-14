@@ -1,0 +1,44 @@
+{
+  "id": 1743092674,
+  "name": "олт",
+  "address": "олтб",
+  "email": "teach.digoxin-0n@icloud.com",
+  "cart": [
+    {
+      "id": "84",
+      "quantity": 3,
+      "size": "XS"
+    },
+    {
+      "id": "85",
+      "quantity": 1,
+      "size": "XS"
+    },
+    {
+      "id": "177",
+      "quantity": 1,
+      "size": "XS"
+    },
+    {
+      "id": "156",
+      "quantity": 1,
+      "size": null
+    },
+    {
+      "id": "155",
+      "quantity": 1,
+      "size": null
+    },
+    {
+      "id": "154",
+      "quantity": 1,
+      "size": null
+    },
+    {
+      "id": "157",
+      "quantity": 1,
+      "size": null
+    }
+  ],
+  "time": "2025-03-27T21:24:34.393415"
+}

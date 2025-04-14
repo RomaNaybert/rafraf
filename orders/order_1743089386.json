@@ -1,0 +1,34 @@
+{
+  "id": 1743089386,
+  "name": "Hjvfy",
+  "address": "ads",
+  "email": "sbzlatvm@mail.ru",
+  "cart": [
+    {
+      "id": "84",
+      "quantity": 2,
+      "size": "XS"
+    },
+    {
+      "id": "90",
+      "quantity": 1,
+      "size": "36"
+    },
+    {
+      "id": 85,
+      "size": "M",
+      "quantity": 1
+    },
+    {
+      "id": 176,
+      "size": "XS",
+      "quantity": 1
+    },
+    {
+      "id": 178,
+      "size": "XS",
+      "quantity": 1
+    }
+  ],
+  "time": "2025-03-27T20:29:46.011226"
+}

@@ -1,0 +1,16 @@
+{
+  "id": 1744123859,
+  "name": "фыв",
+  "address": "фцв, дом уцйв, г. цйв, йцв",
+  "email": "sbzlatvm@mail.ru",
+  "cart": [
+    {
+      "id": 84,
+      "title": "Мужская футболка Gigabyte Aorus",
+      "price": 2200,
+      "size": "XS",
+      "quantity": 1
+    }
+  ],
+  "time": "2025-04-08T19:50:59.771358"
+}

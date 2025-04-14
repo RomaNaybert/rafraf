@@ -1,0 +1,827 @@
+/* === base.css === */
+
+/* Цвета */
+:root {
+    --black: #000000;
+    --white: #FFFFFF;
+    --gray: #949597;
+    --light-gray: #CACCCB;
+    --magenta: #BC2649;
+}
+
+/* Общие стили */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--white);
+    color: var(--black);
+}
+@media (max-width: 768px) {
+  .burger,
+  .user-actions {
+    display: none !important;
+  }
+}
+@media (max-width: 768px) {
+  footer {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .footer-buttons {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 0;
+  }
+
+  .footer-support {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+  }
+}
+/* Активная кнопка профиля */
+.user-actions a.active-profile {
+    border: 2px solid #DE5499;
+    box-shadow: inset 2px 2px 0px black, 3px 3px 0px var(--black);
+    background-color: var(--white);
+    transform: scale(1.05);
+    
+    
+  }
+
+  .cart-count-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background-color: var(--magenta);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    box-shadow: 2px 2px 0 black;
+    z-index: 10;
+    display: none;
+  }
+
+  #mini-cart {
+    pointer-events: auto;
+  }
+  
+  .user-actions a.active-profile i {
+    color: var(--black);
+  }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* HEADER — увеличим высоту, добавим выравнивание */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px; /* Увеличено с 60px */
+    padding: 0 30px;
+    background-color: var(--white);
+    color: var(--black);
+    box-sizing: border-box;
+    margin: 0;
+    border-bottom: 5px solid var(--black);
+    position: relative;
+}
+
+/* Центрируем переключатели в header */
+.switch-wrapper {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Логотип */
+header .logo img {
+    height: 40px;
+}
+
+.main-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 160px); /* минус header+footer */
+  padding: 40px 20px;
+}
+
+/* Бургер-меню */
+.burger {
+    display: none;
+    cursor: pointer;
+}
+
+.burger div {
+    width: 25px;
+    height: 3px;
+    background-color: var(--black);
+    margin: 3px 0;
+}
+
+/* Навигационное меню */
+header nav {
+    display: flex;
+}
+
+header nav ul {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li a {
+    color: var(--black);
+    text-decoration: none;
+}
+
+header .user-actions a {
+    color: var(--black);
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+/* MAIN */
+main {
+    flex: 1;
+    display: flex;
+    padding: 20px;
+}
+
+/* FOOTER — белый фон */
+footer {
+    background-color: var(--white);
+    color: var(--black);
+    text-align: center;
+    padding: 20px;
+    border-top: 5px solid var(--black);
+}
+
+footer .footer-content a {
+    margin: 0 10px;
+}
+
+footer .footer-content img {
+    height: 30px;
+}
+.footer-support {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--light-gray);
+}
+
+.footer-support img {
+  height: 20px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ==== FOOTER SOCIAL BUTTONS ==== */
+.footer-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.footer-buttons .button {
+    --bg-color: var(--white);
+    --main-color: var(--black);
+    width: 42px;
+    height: 42px;
+    border-radius: 100%;
+    border: 2px solid var(--main-color);
+    background-color: var(--bg-color);
+    box-shadow: 4px 4px var(--main-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.footer-buttons .button:active {
+    box-shadow: 0px 0px var(--main-color);
+    transform: translate(3px, 3px);
+}
+
+.footer-buttons .button img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    filter: invert(0%); /* черные иконки */
+}
+
+.footer-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+/* Переключатели (только они) */
+.wrapper {
+    --font-color-dark: var(--black);
+    --font-color-light: var(--white);
+    --bg-color: var(--white);
+    --main-color: var(--black);
+    width: 280px;
+    height: 36px;
+    background-color: var(--bg-color);
+    border: 2px solid var(--main-color);
+    border-radius: 34px;
+    display: flex;
+    flex-direction: row;
+    box-shadow: 4px 4px var(--main-color);
+}
+
+.option {
+    width: 90px;
+    height: 28px;
+    position: relative;
+    top: 2px;
+    left: 2px;
+}
+
+.input {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    appearance: none;
+    cursor: pointer;
+}
+
+.btn {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.span {
+    color: var(--font-color-dark);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.input:checked + .btn {
+    background-color: var(--main-color);
+}
+.input:checked + .btn .span {
+    color: var(--font-color-light);
+}
+
+/* ==== USER ACTION BUTTONS (круглые кнопки) ==== */
+.user-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.user-actions a {
+    --bg-color: var(--white);
+    --main-color: var(--black);
+    width: 34px;  /* Было 40px */
+    height: 34px;
+    border-radius: 100%;
+    border: 2px solid var(--main-color);
+    background-color: var(--bg-color);
+    box-shadow: 3px 3px var(--main-color); /* чуть меньше тень */
+    font-size: 18px; /* уменьшили размер иконки */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    color: var(--main-color);
+}
+
+.user-actions a:active {
+    box-shadow: 0 0 var(--main-color);
+    transform: translate(2px, 2px);
+}
+
+#global-loader {
+    position: fixed;
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.9);
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    pointer-events: none;
+  }
+
+  #global-loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .spinner {
+    position: relative;
+    width: 30px;
+    height: 30px;
+  }
+
+  .spinner div {
+    position: absolute;
+    width: 40%;
+    height: 120%;
+    background: #000000;
+    transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
+    animation: spinner-fzua35 1s calc(var(--delay) * 1s) infinite ease;
+  }
+
+  .spinner div:nth-child(1)  { --delay: 0.1; --rotation: 36;  --translation: 120; }
+  .spinner div:nth-child(2)  { --delay: 0.2; --rotation: 72;  --translation: 120; }
+  .spinner div:nth-child(3)  { --delay: 0.3; --rotation: 108; --translation: 120; }
+  .spinner div:nth-child(4)  { --delay: 0.4; --rotation: 144; --translation: 120; }
+  .spinner div:nth-child(5)  { --delay: 0.5; --rotation: 180; --translation: 120; }
+  .spinner div:nth-child(6)  { --delay: 0.6; --rotation: 216; --translation: 120; }
+  .spinner div:nth-child(7)  { --delay: 0.7; --rotation: 252; --translation: 120; }
+  .spinner div:nth-child(8)  { --delay: 0.8; --rotation: 288; --translation: 120; }
+  .spinner div:nth-child(9)  { --delay: 0.9; --rotation: 324; --translation: 120; }
+  .spinner div:nth-child(10) { --delay: 1;   --rotation: 360; --translation: 120; }
+
+  @keyframes spinner-fzua35 {
+    0%,10%,20%,30%,50%,60%,70%,80%,90%,100% {
+      transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
+    }
+    50% {
+      transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1.5%));
+    }
+  }
+
+  .brutalist-container {
+    position: relative;
+    width: fit-content;
+    font-family: monospace;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .brutalist-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    background-color: #fff;
+    border: 4px solid #000;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 5px 5px 0 #000, 10px 10px 0 #BC2649;
+  }
+  
+  
+  
+
+  .brutalist-input:focus::after {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: white;
+    z-index: -1;
+  }
+  
+  .brutalist-input:focus::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: -2;
+    clip-path: inset(0 100% 0 0);
+  }
+  
+  
+  
+  .brutalist-label {
+    position: absolute;
+    left: -3px;
+    top: -35px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #000;
+    padding: 5px 10px;
+    transform: rotate(-1deg);
+    z-index: 1;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  
+  .brutalist-input:focus + .brutalist-label {
+    transform: rotate(0deg) scale(1.05);
+    background-color: #BC2649;
+  }
+  
+  .smooth-type {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .smooth-type::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0) 100%);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .smooth-type:focus::before {
+    opacity: 1;
+    animation: type-gradient 2s linear infinite;
+  }
+  
+  @keyframes type-gradient {
+    0% { background-position: 300px 0; }
+    100% { background-position: 0 0; }
+  }
+  
+  .brutalist-input::placeholder {
+    color: #888;
+    transition: color 0.3s ease;
+  }
+  
+  .brutalist-input:focus::placeholder {
+    color: transparent;
+  }
+  
+  @keyframes focus-pulse {
+    0%, 100% { border-color: #000; }
+    50% { border-color: #BC2649; }
+  }
+  
+
+
+
+
+    .search-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    animation: fadeIn 0.4s ease forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  #searchModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+  }
+  
+  .modal-content {
+    margin-top: 80px; /* 🚀 смещаем вниз */
+    width: 100%;
+    max-width: 960px;
+    padding: 20px;
+    box-sizing: border-box;
+    background: white;
+    color: black;
+    border: 5px solid black;
+    box-shadow: 10px 10px 0 black;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: calc(100vh - 160px); /* 💡 чтобы не вылезало */
+    overflow: hidden; /* 🔒 обрезаем всё лишнее */
+  }
+  
+  /* Input + кнопки — в одной строке */
+  .input-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .search-actions-inline {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .brutalist-input {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  /* 🧱 Результаты — ограничиваем по высоте */
+  .search-results {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 400px;
+    padding: 20px;
+    border: 3px solid black;
+    background: white;
+    color: black;
+    box-shadow: 6px 6px 0 black;
+  
+    width: 100%;
+    box-sizing: border-box; /* 🧱 чтобы padding не ломал ширину */
+    overflow-x: hidden;      /* 🔒 защита от горизонтального скролла */
+  }
+  
+  /* Мобильная адаптация */
+  @media (max-width: 768px) {
+    .input-wrapper {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .search-actions-inline {
+      justify-content: space-between;
+      width: 100%;
+    }
+  
+    .modal-content {
+      margin-top: 40px;
+      padding: 15px;
+      max-height: calc(100vh - 100px);
+    }
+  
+    .search-results {
+      max-height: 250px;
+    }
+  }
+  .search-btn,
+  .close-btn {
+    width: auto;
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 4px solid black;
+    box-shadow: 5px 5px 0 black;
+  }
+  .search-btn:hover {
+    background-color: black;
+    color: white;
+  }
+  .search-btn:hover i,
+  .close-btn:hover i {
+    color: white;
+  }
+  .close-btn:hover {
+    background-color: #BC2649;
+    color: white;
+  }
+  .search-results {
+    padding: 2rem;
+    width: 100%;
+    background: white;
+    color: black;
+    margin-top: 2rem;
+    box-shadow: 10px 10px 0 black;
+    border: 4px solid black;
+  }
+  .search-results h2 {
+    font-size: 20px;
+    margin-bottom: 1rem;
+  }
+  .product-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .product-card {
+    width: 200px;
+    border: 3px solid black;
+    padding: 10px;
+    background: white;
+    box-shadow: 5px 5px 0 black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    min-height: 340px;
+  }
+  .product-card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-bottom: 2px solid black;
+    margin-bottom: 10px;
+    max-height: 180px;
+  }
+  .product-card-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  .product-card-price {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .product-card .cart-btn {
+    background: #000;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: auto;
+  }
+  .product-card .cart-btn:hover {
+    background: #BC2649;
+  }
+  @media (max-width: 600px) {
+    .input-wrapper {
+      flex-direction: column;
+      gap: 15px;
+    }
+    .search-actions-inline {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .product-card {
+      width: 100%;
+    }
+  }
+
+
+  .brutalist-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 112px; /* 169 / 1.5 */
+    height: 40px;  /* 60 / 1.5 */
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    border: 2px solid #fff;       /* 3px / 1.5 */
+    outline: 2px solid #000;      /* 3px / 1.5 */
+    box-shadow: 4px 4px 0 #BC2649; /* 6px / 1.5 */
+    transition: all 0.1s ease-out;
+    padding: 0 10px;              /* 15px / 1.5 */
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    margin-left: 10px; /* Добавлен отступ влево */
+  }
+  
+  .brutalist-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.8),
+      transparent
+    );
+    z-index: 1;
+    transition: none;
+    opacity: 0;
+  }
+  
+  @keyframes slide {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+  
+  .brutalist-button:hover::before {
+    opacity: 1;
+    animation: slide 2s infinite;
+  }
+  
+  .brutalist-button:hover {
+    transform: translate(-3px, -3px);  /* 4px / 1.5 */
+    box-shadow: 6px 6px 0 #000;       /* 10px / 1.5 */
+    background-color: #000;
+    color: #fff;
+  }
+  
+  .brutalist-button:active {
+    transform: translate(3px, 3px);   /* 4px / 1.5 */
+    box-shadow: 0px 0px 0 #BC2649;
+    background-color: #fff;
+    color: #000;
+    border-color: #000;
+  }
+  
+  .button-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+    transition: transform 0.2s ease-out;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .brutalist-button:hover .button-text {
+    transform: skew(-5deg);
+  }
+  
+  .brutalist-button:active .button-text {
+    transform: skew(5deg);
+  }
+  
+  .button-text span:first-child {
+    font-size: 9px;  /* 11px / 1.5 */
+    text-transform: uppercase;
+  }
+  
+  .button-text span:last-child {
+    font-size: 13px; /* 16px / 1.5 */
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 768px) {
+    header .burger,
+    header .user-actions {
+      display: none !important;
+    }
+  
+    footer .burger,
+    footer .user-actions {
+      display: none !important;
+    }
+  }
+  @media (max-width: 768px) {
+    .mobile-nav {
+      display: none !important;
+    }
+  }
+  @media (max-width: 768px) {
+    .main-section {
+      display: flex !important; /* ВОТ ЭТО добавь */
+      flex-direction: column !important;
+      gap: 40px !important;
+      align-items: center !important;
+    }
+  }

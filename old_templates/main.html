@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
+    <link rel="stylesheet" href="../static/main.css">
+</head>
+<body>
+    <header>
+        <div class="burger-menu" onclick="toggleMenu()">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+        <div>Интернет-магазин</div>
+        
+        <button id="auth-button" onclick="handleAuthButton()">Войти/Зарегистрироваться</button>
+    </header>
+    <div class="menu" id="menu">
+        <ul>
+            <li><a href="top">Верхняя одежда</a></li>
+            <li><a href="bottom">Нижняя одежда</a></li>
+            <li><a href="shoes">Обувь</a></li>
+            <li><a href="accessories">Аксессуары</a></li>
+        </ul>
+    </div>
+    <div class="banner"></div>
+    <div class="products">
+        <div class="product">
+            <img src="https://via.placeholder.com/200" alt="Товар">
+            <h2>Товар 1</h2>
+            <p>₽2999</p>
+            <button>В корзину</button>
+        </div>
+        <div class="product">
+            <img src="https://via.placeholder.com/200" alt="Товар">
+            <h2>Товар 2</h2>
+            <p>₽3999</p>
+            <button>В корзину</button>
+        </div>
+        <div class="product">
+            <img src="https://via.placeholder.com/200" alt="Товар">
+            <h2>Товар 3</h2>
+            <p>₽4999</p>
+            <button>В корзину</button>
+        </div>
+        <div class="product">
+            <img src="https://via.placeholder.com/200" alt="Товар">
+            <h2>Товар 4</h2>
+            <p>₽5999</p>
+            <button>В корзину</button>
+        </div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2023 Интернет-магазин. Все права защищены.</p>
+    </div>
+    <script>
+        function handleAuthButton() {
+            const button = document.getElementById('auth-button');
+            if (button.innerText === 'Войти/Зарегистрироваться') {
+                window.location.href = "/register";
+            } else {
+                window.location.href = "/profile";  // Переход в личный кабинет
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/check_session')
+                .then(response => response.json())
+                .then(data => {
+                    const button = document.getElementById('auth-button');
+                    if (data.logged_in) {
+                        button.innerText = 'Личный кабинет';
+                    }
+                });
+        });
+
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('active');
+        }
+
+        function goToCart() {
+            window.location.href = "/cart";
+        }
+    </script>
+</body>
+</html>

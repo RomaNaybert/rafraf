@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Страница не найдена - 404</title>
+  <style>
+    :root {
+      --black: #000000;
+      --white: #FFFFFF;
+      --gray: #949597;
+      --light-gray: #CACCCB;
+      --magenta: #BC2649;
+    }
+    /* Сброс стилей */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: var(--white);
+      font-family: 'Arial', sans-serif;
+      color: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .container {
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 8rem;
+      margin-bottom: 20px;
+      color: var(--magenta);
+      text-shadow: 3px 3px 0 var(--light-gray);
+      animation: fadeIn 1s ease-out forwards;
+      opacity: 0;
+    }
+    p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      color: var(--gray);
+      animation: fadeIn 1.5s ease-out forwards;
+      opacity: 0;
+    }
+    .home-btn {
+      display: inline-block;
+      padding: 15px 30px;
+      font-size: 1rem;
+      background-color: var(--magenta);
+      color: var(--white);
+      text-decoration: none;
+      border: 2px solid var(--black);
+      transition: background-color 0.3s, color 0.3s;
+      animation: fadeIn 2s ease-out forwards;
+      opacity: 0;
+    }
+    .home-btn:hover {
+      background-color: var(--white);
+      color: var(--magenta);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Адаптивность для мобильных устройств */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 6rem;
+      }
+      p {
+        font-size: 1.2rem;
+      }
+      .home-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>404</h1>
+    <p>Страница не найдена</p>
+    <a href="/" class="home-btn">Вернуться на главную</a>
+  </div>
+  <script>
+    // Место для будущих доработок, например динамических анимаций или интерактивных элементов
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('404 страница загружена');
+    });
+  </script>
+</body>
+</html>

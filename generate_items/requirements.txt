@@ -1,0 +1,2 @@
+pip install -qq git+https://github.com/openai/shap-e.git 
+pip install -qq mediapy

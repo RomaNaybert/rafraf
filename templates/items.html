@@ -1,0 +1,303 @@
+{% extends "profile_panel.html" %}
+
+{% block profile_page %}
+
+<style>
+:root {
+  --black: #000000;
+  --white: #FFFFFF;
+  --gray: #949597;
+  --light-gray: #CACCCB;
+  --magenta: #BC2649;
+}
+
+.card-top {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.items-page-wrapper {
+  width: calc(100% - 350px);
+  margin-left: 300px;
+  margin-right: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 30px 0;
+  animation: fadeInUp 0.6s ease-in-out;
+}
+
+.items-header-box, .view-sort-box {
+  background-color: var(--white);
+  border: 3px solid var(--black);
+  outline: 3px solid var(--white);
+  box-shadow: 6px 6px 0 var(--magenta);
+  border-radius: 24px;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.items-header-box h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--black);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.create-item-btn {
+  padding: 12px 22px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: var(--black);
+  color: var(--white);
+  border: 3px solid var(--white);
+  outline: 3px solid var(--black);
+  box-shadow: 4px 4px 0 var(--magenta);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.create-item-btn:hover {
+  background-color: var(--white);
+  color: var(--black);
+  transform: translate(-3px, -3px);
+  box-shadow: 6px 6px 0 var(--black);
+}
+
+.view-sort-box {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.view-switcher, .sort-box {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.view-switcher button {
+  padding: 10px 16px;
+  font-weight: bold;
+  font-size: 14px;
+  border: 2px solid var(--black);
+  background-color: var(--white);
+  color: var(--black);
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--magenta);
+  transition: 0.2s ease;
+}
+
+.view-switcher button.active {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.sort-box select {
+  padding: 10px 14px;
+  border: 2px solid var(--black);
+  border-radius: 10px;
+  background-color: var(--white);
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 3px 3px 0 var(--magenta);
+}
+
+.items-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.product-card {
+    height: 360px;
+  width: 220px;
+  background-color: var(--white);
+  border: 3px solid var(--black);
+  outline: 3px solid var(--white);
+  box-shadow: 4px 4px 0 var(--magenta);
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  animation: fadeInCard 0.5s ease-in-out;
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 6px 6px 0 var(--black);
+}
+
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid var(--black);
+  margin-bottom: 12px;
+}
+
+.card-text h2 {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--black);
+  text-align: center;
+}
+
+.card-text .price {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--magenta);
+  background-color: var(--white);
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 2px solid var(--black);
+  display: inline-block;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.edit-btn {
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: var(--black);
+  color: var(--white);
+  border: 2px solid var(--white);
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 var(--magenta);
+  cursor: pointer;
+  transition: 0.2s ease;
+  align-self: center;
+}
+
+.edit-btn:hover {
+  background-color: var(--white);
+  color: var(--black);
+  transform: translate(-2px, -2px);
+}
+
+/* Список-стиль */
+.items-grid.list-view .product-card {
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  min-height: 100px;
+  gap: 20px;
+  padding: 16px 20px;
+}
+
+.items-grid.list-view .product-card img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 0;
+}
+
+.items-grid.list-view .card-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.items-grid.list-view .card-text h2,
+.items-grid.list-view .card-text .price {
+  text-align: left;
+  margin: 0;
+}
+
+.items-grid.list-view .edit-btn {
+  margin-top: 0;
+  align-self: flex-end;
+}
+
+@media screen and (min-width: 1000px) {
+  .items-grid.list-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+@keyframes fadeInCard {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<div class="items-page-wrapper">
+  <div class="items-header-box">
+    <h1>Мои товары</h1>
+    <button class="create-item-btn" onclick="window.location.href='/create_item'">+ Добавить товар</button>
+  </div>
+
+  <div class="view-sort-box">
+    <div class="view-switcher">
+      <button class="active" onclick="switchView('grid')">Сетка</button>
+      <button onclick="switchView('list')">Список</button>
+    </div>
+    <div class="sort-box">
+      <select id="sortSelect" onchange="sortItems()">
+        <option value="name">Сортировать по имени</option>
+        <option value="price">Сортировать по цене</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="items-grid" id="itemsGrid">
+    {% for item in items %}
+    <div class="product-card" data-name="{{ item.name }}" data-price="{{ item.price }}">
+        <div class="card-top">
+          <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.name }}">
+          <div class="card-text">
+            <h2>{{ item.name }}</h2>
+            <div class="price">{{ item.price }} ₽</div>
+          </div>
+        </div>
+        <button class="edit-btn" onclick="window.location.href='/edit_item?item_id={{ item.id }}'">Редактировать</button>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  function switchView(view) {
+    const grid = document.getElementById('itemsGrid');
+    const buttons = document.querySelectorAll('.view-switcher button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    grid.className = view === 'grid' ? 'items-grid' : 'items-grid list-view';
+    buttons[view === 'grid' ? 0 : 1].classList.add('active');
+  }
+
+  function sortItems() {
+    const sortValue = document.getElementById('sortSelect').value;
+    const grid = document.getElementById('itemsGrid');
+    const cards = Array.from(grid.children);
+
+    cards.sort((a, b) => {
+      if (sortValue === 'name') {
+        return a.dataset.name.localeCompare(b.dataset.name);
+      } else {
+        return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+      }
+    });
+
+    grid.innerHTML = '';
+    cards.forEach(card => grid.appendChild(card));
+  }
+</script>
+
+{% endblock %}

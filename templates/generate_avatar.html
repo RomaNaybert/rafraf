@@ -1,0 +1,468 @@
+{% extends "profile_panel.html" %}
+
+{% block profile_page %}
+<link rel="stylesheet" href="{{ url_for('static', filename='generate_avatar.css') }}">
+
+<div class="avatar-gen-wrapper">
+  <div class="avatar-gen-flex">
+
+    <!-- Левая колонка — ФОРМА -->
+    <div class="avatar-form-column">
+      <div class="section-title-wrapper">
+        <h2 class="section-title">Ваши параметры</h2>
+        <button id="openMeasureModal" class="info-icon" title="Как снять мерки">
+          <i class="fas fa-circle-info"></i>
+        </button>
+      </div>
+      <form id="modelForm" class="form-grid">
+        <div class="form-group">
+          <label for="height">Рост (см):</label>
+          <input type="number" id="height" name="height" required>
+        </div>
+        <div class="form-group">
+          <label for="weight">Вес (кг):</label>
+          <input type="number" id="weight" name="weight" required>
+        </div>
+        <div class="form-group">
+          <label for="arm-span">Размах рук (см):</label>
+          <input type="number" id="arm-span" name="arm-span" required>
+        </div>
+        <div class="form-group">
+          <label for="leg-length">Длина ноги (см):</label>
+          <input type="number" id="leg-length" name="leg-length" required>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="brutal-button">Сгенерировать аватар</button>
+        </div>
+      </form>
+  </div>
+
+    <!-- Правая колонка — МОДЕЛЬ -->
+    <div class="avatar-model-column">
+      <h2 class="section-title">Ваш аватар</h2>
+      <div class="model-canvas-box" id="model-container">
+        <canvas id="modelCanvas"></canvas>
+      </div>
+
+      <div class="zoom-buttons">
+        <button id="zoomInButton" class="zoom-button">+</button>
+        <button id="zoomOutButton" class="zoom-button">-</button>
+      </div>
+
+      <button class="brutal-button save-button" id="saveButton" style="display: none;">Сохранить</button>
+    </div>
+  </div>
+</div>
+<div id="measureModal" class="modal-overlay">
+  <div class="modal-content">
+    <span id="closeMeasureModal" class="modal-close">×</span>
+    <section class="atelier-section" id="measureGuide">
+      <h2 class="subtitle">Как правильно снять мерки</h2>
+      <div class="measurements-grid">
+        <div class="measure-card">
+          <img src="https://cdn-icons-png.flaticon.com/128/13943/13943823.png" alt="Обхват шеи">
+          <p><strong>Обхват шеи</strong><br>Измерьте окружность основания шеи, плотно, но не туго.</p>
+        </div>
+        <div class="measure-card">
+          <img src="https://cdn-icons-png.flaticon.com/128/13943/13943811.png" alt="Обхват груди">
+          <p><strong>Обхват груди</strong><br>Измерьте по самой выступающей части груди и лопаток.</p>
+        </div>
+        <div class="measure-card">
+          <img src="https://cdn-icons-png.flaticon.com/128/13943/13943816.png" alt="Обхват талии">
+          <p><strong>Обхват талии</strong><br>Измерьте по самой узкой части талии, не втягивая живот.</p>
+        </div>
+        <div class="measure-card">
+          <img src="https://cdn-icons-png.flaticon.com/128/13943/13943805.png" alt="Обхват бедер">
+          <p><strong>Обхват бёдер</strong><br>Измерьте по самой широкой части бёдер, стоя прямо.</p>
+        </div>
+        <div class="measure-card">
+          <img src="https://cdn-icons-png.flaticon.com/128/13943/13943808.png" alt="Рост">
+          <p><strong>Рост</strong><br>Измерьте от макушки до пяток без обуви, стоя у стены.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<style>
+  .section-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+.avatar-gen-wrapper {
+  max-width: 1000px;
+  margin: 4rem auto;
+  padding: 2rem 3rem;
+  background: var(--white);
+  border: 5px solid var(--black);
+  border-radius: 2rem;
+  box-shadow: 10px 10px 0 var(--black);
+  transform: translateX(120px);
+}
+
+.avatar-gen-flex {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.avatar-form-column, .avatar-model-column {
+  flex: 1 1 45%;
+  min-width: 300px;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: var(--black);
+  border-bottom: 4px solid var(--magenta);
+  padding-bottom: 0.5rem;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.info-icon {
+  font-size: 1.6rem;
+  color: var(--black);
+  background: var(--white);
+  border: 3px solid var(--black);
+  border-radius: 50%;
+  padding: 0.4rem 0.6rem;
+  box-shadow: 4px 4px 0 var(--black);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.info-icon:hover {
+  color: var(--black);
+}
+.form-group input {
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border: 3px solid var(--black);
+  border-radius: 1rem;
+  background: var(--light-gray);
+  width: 100%;
+}
+
+.form-submit {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.model-canvas-box {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--light-gray);
+  border: 4px solid var(--black);
+  border-radius: 2rem;
+  box-shadow: 6px 6px 0 var(--black);
+  margin-bottom: 1rem;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+#modelCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.zoom-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.zoom-button {
+  width: 50px;
+  height: 50px;
+  font-size: 1.8rem;
+  border: 3px solid var(--black);
+  background: var(--white);
+  border-radius: 50%;
+  box-shadow: 4px 4px 0 var(--black);
+  cursor: pointer;
+}
+
+.zoom-button:hover {
+  background: var(--gray);
+}
+
+.brutal-button {
+  font-size: 1rem;
+  padding: 0.8rem 2rem;
+  font-weight: bold;
+  background: var(--white);
+  border: 3px solid var(--black);
+  border-radius: 1rem;
+  box-shadow: 5px 5px 0 var(--black);
+  transition: transform 0.2s;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.brutal-button:hover {
+  background: var(--magenta);
+  color: var(--white);
+  transform: scale(1.05);
+}
+
+.save-button {
+  display: block;
+  margin: 0 auto;
+}
+.info-icon {
+  font-size: 1.5rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.3s;
+}
+
+.info-icon:hover {
+  color: var(--magenta);
+}
+
+/* Модальное окно */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: var(--white);
+  border: 4px solid var(--black);
+  border-radius: 2rem;
+  padding: 2rem;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 10px 10px 0 var(--black);
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--black);
+}
+
+.measurements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.measure-card {
+  text-align: center;
+}
+
+.measure-card img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 0.5rem;
+}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('modelForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const height = parseFloat(document.getElementById('height').value);
+        const weight = parseFloat(document.getElementById('weight').value);
+        const armSpan = parseFloat(document.getElementById('arm-span').value);
+        const legLength = parseFloat(document.getElementById('leg-length').value);
+
+        fetch('/generate_model', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                height: height,
+                weight: weight,
+                arm_span: armSpan,
+                leg_length: legLength,
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Ответ сервера:', data);
+                if (data.model_path) {
+                    loadModel(data.model_path);
+                } else {
+                    console.error('Модель не найдена.');
+                }
+            })
+            .catch((error) => {
+                console.error('Ошибка:', error);
+            });
+    });
+
+    let scene, camera, renderer, model;
+
+    function init() {
+        const canvas = document.getElementById('modelCanvas');
+        const modelContainer = document.getElementById('model-container');
+
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xcccccc);
+
+        const aspect = canvas.clientWidth / canvas.clientHeight;
+        camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
+        camera.position.z = 5;
+
+        renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(5, 10, 7.5);
+        scene.add(light);
+
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+
+        canvas.addEventListener('mousedown', (event) => {
+            isDragging = true;
+            previousMousePosition = { x: event.clientX, y: event.clientY };
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        document.addEventListener('mousemove', (event) => {
+            if (isDragging) {
+                const deltaMove = {
+                    x: event.clientX - previousMousePosition.x,
+                    y: event.clientY - previousMousePosition.y,
+                };
+                const deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(
+                    new THREE.Euler(0, toRadians(deltaMove.x * 0.5), 0, 'XYZ')
+                );
+                if (model) {
+                    model.quaternion.multiplyQuaternions(deltaRotationQuaternion, model.quaternion);
+                }
+                previousMousePosition = { x: event.clientX, y: event.clientY };
+            }
+        });
+
+        function toRadians(degrees) {
+            return degrees * (Math.PI / 180);
+        }
+
+        function onWindowResize() {
+            const width = modelContainer.clientWidth;
+            const height = modelContainer.clientHeight;
+
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        window.addEventListener('resize', onWindowResize);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    }
+
+    function loadModel(modelPath) {
+    const loader = new THREE.OBJLoader();
+
+    loader.load(modelPath, function (obj) {
+        if (model) {
+            scene.remove(model);
+        }
+        model = obj;
+        model.position.set(0, 0, 0);
+        scene.add(model);
+        document.getElementById('saveButton').style.display = 'block';
+    }, undefined, function (error) {
+        console.error("Ошибка загрузки OBJ модели:", error);
+    });
+}
+
+    function zoomIn() {
+        camera.position.z = Math.max(camera.position.z - 0.5, 1);
+    }
+
+    function zoomOut() {
+        camera.position.z = Math.min(camera.position.z + 0.5, 100);
+    }
+
+    document.getElementById('zoomInButton').addEventListener('click', zoomIn);
+    document.getElementById('zoomOutButton').addEventListener('click', zoomOut);
+
+    document.getElementById('saveButton').addEventListener('click', function(event) {
+    event.preventDefault();  // Предотвращаем стандартное поведение ссылки
+    fetch('/save_model')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/avatar';  // Перенаправляем на главную страницу после выхода
+            } else {
+                alert('Ошибка при выходе из системы.');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            alert('Ошибка при выходе из системы.');
+        });
+    });
+
+    init();
+});
+
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('measureModal');
+    const openBtn = document.getElementById('openMeasureModal');
+    const closeBtn = document.getElementById('closeMeasureModal');
+
+    openBtn.addEventListener('click', () => {
+      modal.style.display = 'flex';
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  });
+</script>
+{% endblock %}

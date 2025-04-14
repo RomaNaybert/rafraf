@@ -1,0 +1,60 @@
+{% extends "profile_panel.html" %}
+
+{% block profile_page %}
+<style>
+    .profile-info-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 600px;
+  padding: 30px;
+  border: 3px solid var(--black);
+  outline: 3px solid var(--white);
+  box-shadow: 6px 6px 0 var(--magenta);
+  background-color: var(--white);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.profile-title {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 30px;
+  color: var(--black);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.profile-detail {
+  font-size: 18px;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  border: 2px solid var(--black);
+  background-color: var(--light-gray);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 var(--magenta);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.label {
+  font-weight: bold;
+  color: var(--black);
+  min-width: 120px;
+}
+</style>
+
+<div class="profile-info-container">
+  <div class="profile-card">
+    <h1 class="profile-title">Добро пожаловать, {{ user_data.name }} {{ user_data.surname }}!</h1>
+    <div class="profile-detail"><span class="label">Email:</span> {{ user_data.email }}</div>
+    <div class="profile-detail"><span class="label">Телефон:</span> {{ user_data.phone }}</div>
+  </div>
+</div>
+{% endblock %}

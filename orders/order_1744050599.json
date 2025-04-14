@@ -1,0 +1,23 @@
+{
+  "id": 1744050599,
+  "name": "выпа",
+  "address": "ыва, дом два, г. выа, выа",
+  "email": "sbzlatvm@mail.ru",
+  "cart": [
+    {
+      "id": 84,
+      "title": "Мужская футболка Gigabyte Aorus",
+      "price": 2200,
+      "size": "XS",
+      "quantity": 1
+    },
+    {
+      "id": 85,
+      "title": "Мужская рубашка в клетку",
+      "price": 3100,
+      "size": "XS",
+      "quantity": 1
+    }
+  ],
+  "time": "2025-04-07T23:29:59.983439"
+}

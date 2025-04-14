@@ -1,0 +1,19 @@
+{
+  "id": 1743090208,
+  "name": "Роман",
+  "address": "ввв",
+  "email": "sbzlatvm@mail.ru",
+  "cart": [
+    {
+      "id": 84,
+      "size": "XS",
+      "quantity": 1
+    },
+    {
+      "id": 85,
+      "size": "XS",
+      "quantity": 2
+    }
+  ],
+  "time": "2025-03-27T20:43:28.404690"
+}

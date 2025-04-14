@@ -1,0 +1,281 @@
+{% extends "profile_panel.html" %}
+
+{% block profile_page %}
+
+<style>
+:root {
+  --black: #000000;
+  --white: #FFFFFF;
+  --gray: #949597;
+  --light-gray: #CACCCB;
+  --magenta: #BC2649;
+}
+
+.create-item-wrapper {
+  width: calc(100% - 340px);
+  margin-left: 300px;
+  margin-right: 60px;
+  margin-top: 30px;
+  padding: 20px 40px 40px 40px;
+  background-color: var(--light-gray);
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  animation: fadeInUp 0.5s ease-in-out;
+  box-sizing: border-box;
+}
+
+.create-item-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.create-item-wrapper h2 {
+  font-size: 32px;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: var(--black);
+  background-color: var(--white);
+  border: 3px solid var(--black);
+  outline: 3px solid var(--white);
+  box-shadow: 6px 6px 0 var(--magenta);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.create-form-group {
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 20px;
+  border: 3px solid var(--black);
+  outline: 3px solid var(--white);
+  box-shadow: 6px 6px 0 var(--magenta);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.create-form-group label {
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--black);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.create-form-group label i {
+  font-size: 18px;
+  color: var(--gray);
+}
+
+.create-form-group input,
+.create-form-group select,
+.create-form-group textarea {
+  padding: 12px;
+  font-size: 15px;
+  border: 2px solid var(--black);
+  border-radius: 10px;
+  background-color: var(--light-gray);
+  box-shadow: 4px 4px 0 var(--magenta);
+  resize: vertical;
+}
+
+.create-form-group textarea {
+  min-height: 120px;
+}
+
+.image-preview {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  transition: all 0.3s ease-in-out;
+}
+
+.image-preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 2px solid var(--black);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 var(--magenta);
+  transition: transform 0.3s ease;
+}
+
+.image-preview img:hover {
+  transform: scale(1.1) rotate(1deg);
+}
+
+#create-item-submit {
+  margin-top: 20px;
+  padding: 14px 28px;
+  background-color: var(--black);
+  color: var(--white);
+  font-weight: bold;
+  border: 2px solid var(--white);
+  outline: 3px solid var(--black);
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 5px 5px 0 var(--magenta);
+  transition: 0.3s ease;
+}
+
+#create-item-submit:hover {
+  background-color: var(--white);
+  color: var(--black);
+  transform: translate(-2px, -2px);
+}
+
+.create-form-group.invalid input,
+.create-form-group.invalid select,
+.create-form-group.invalid textarea {
+  border-color: red !important;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media screen and (max-width: 1024px) {
+  .create-item-wrapper {
+    flex-direction: column;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    padding: 30px 20px;
+  }
+}
+</style>
+
+<div class="create-item-wrapper">
+  <div class="create-item-form">
+    <h2>Добавление товара</h2>
+
+    <div class="create-form-group" id="group-category">
+      <label for="category"><i class="fa fa-tags"></i> Выбор категории:</label>
+      <select id="category" name="category">
+        <option value="" disabled selected>Категория</option>
+        <option value="top">🧥 Верхняя одежда</option>
+        <option value="bottom">👖 Нижняя одежда</option>
+        <option value="shoes">👟 Обувь</option>
+        <option value="accessories">👜 Аксессуары</option>
+      </select>
+    </div>
+
+    <div class="create-form-group" id="group-name">
+      <label for="product-name">Название товара</label>
+      <input type="text" id="product-name" name="product-name">
+    </div>
+
+    <div class="create-form-group" id="group-images">
+      <label for="product-images">Добавление изображений</label>
+      <input type="file" id="product-images" name="product-images" multiple>
+      <div class="image-preview" id="image-preview"></div>
+    </div>
+
+    <div class="create-form-group" id="group-description">
+      <label for="product-description">Описание товара</label>
+      <textarea id="product-description" name="product-description"></textarea>
+    </div>
+
+    <div class="create-form-group" id="group-price">
+      <label for="product-price">Цена товара (₽)</label>
+      <input type="number" id="product-price" name="product-price" step="0.01">
+    </div>
+
+    <div class="create-form-group" id="group-quantity">
+      <label for="product-quantity">Количество единиц товара</label>
+      <input type="number" id="product-quantity" name="product-quantity">
+    </div>
+
+    <button id="create-item-submit">Добавить товар</button>
+  </div>
+</div>
+
+<script>
+document.getElementById('product-images').addEventListener('change', function(event) {
+  const files = event.target.files;
+  const preview = document.getElementById('image-preview');
+  preview.innerHTML = '';
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+function markInvalid(id) {
+  document.getElementById(id).classList.add('invalid');
+}
+
+function clearInvalids() {
+  document.querySelectorAll('.create-form-group.invalid').forEach(e => e.classList.remove('invalid'));
+}
+
+document.getElementById('create-item-submit').addEventListener('click', function() {
+  clearInvalids();
+  let invalid = false;
+
+  const requiredFields = [
+    { id: 'category', group: 'group-category' },
+    { id: 'product-name', group: 'group-name' },
+    { id: 'product-description', group: 'group-description' },
+    { id: 'product-price', group: 'group-price' },
+    { id: 'product-quantity', group: 'group-quantity' },
+    { id: 'product-images', group: 'group-images' }
+  ];
+
+  requiredFields.forEach(field => {
+    const input = document.getElementById(field.id);
+    if (!input.value || (input.type === 'file' && input.files.length === 0)) {
+      markInvalid(field.group);
+      invalid = true;
+    }
+  });
+
+  if (invalid) {
+    alert('Пожалуйста, заполните все поля.');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('category', document.getElementById('category').value);
+  formData.append('product_name', document.getElementById('product-name').value);
+  formData.append('product_description', document.getElementById('product-description').value);
+  formData.append('product_price', document.getElementById('product-price').value);
+  formData.append('product_quantity', document.getElementById('product-quantity').value);
+
+  const images = document.getElementById('product-images').files;
+  for (let i = 0; i < images.length; i++) {
+    formData.append('product_images', images[i]);
+  }
+
+  fetch('/add_item', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert('Товар успешно добавлен!');
+      window.location.href = '/items';
+    } else {
+      alert('Ошибка при добавлении товара.');
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert('Ошибка при добавлении товара.');
+  });
+});
+</script>
+
+{% endblock %}

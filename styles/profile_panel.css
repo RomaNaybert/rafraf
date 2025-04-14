@@ -1,0 +1,103 @@
+
+/* Стили для сайдбара */
+.sidebar {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px; /* Отступы внутри сайдбара */
+    width: 100%; /* Адаптивная ширина на всю ширину контейнера */
+    height: 50px; /* Фиксированная высота сайдбара */
+    display: flex;
+    align-items: center; /* Центрирование содержимого по вертикали */
+    justify-content: center; /* Центрирование содержимого по горизонтали */
+    box-sizing: border-box; /* Включаем padding в общую ширину */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Тень для сайдбара */
+}
+
+.sidebar ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    justify-content: center; /* Центрируем элементы по горизонтали */
+    width: 100%; /* Убедимся, что список занимает всю ширину сайдбара */
+}
+
+.sidebar ul li {
+    margin: 0 15px; /* Отступы между пунктами */
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+
+.sidebar ul li a:hover {
+    background-color: #333;
+}
+
+/* Стили для контейнера основного контента */
+.content {
+    width: 100%; /* Ширина контента равна ширине контейнера */
+    padding: 15px; /* Внутренние отступы */
+    background-color: #f9f9f9; /* Цвет фона для контента */
+    border-radius: 8px; /* Скругление углов */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Тень для контента */
+    margin-top: 20px; /* Отступ сверху, чтобы контент начинался под сайдбаром */
+    text-align: center; /* Центрирование текста внутри контента */
+    box-sizing: border-box; /* Включаем padding в общую ширину */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Скрываем выпадающий список на больших экранах */
+.dropdown-menu {
+    display: none;
+    margin: 10px 0;
+}
+
+/* Показываем выпадающий список на экранах шириной менее 768px */
+@media (max-width: 840px) {
+    .sidebar {
+        display: none;
+    }
+    .dropdown-menu {
+        display: block;
+    }
+
+    .dropdown-menu select {
+        width: 100%;
+        padding: 10px;
+        height: 50px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        background-color: #000; /* Черный фон для выпадающего меню */
+        color: #fff; /* Белый текст */
+    }
+    
+    .dropdown-menu select option {
+        background-color: #000; /* Черный фон для пунктов меню */
+        color: #fff; /* Белый текст для пунктов */
+    }
+}
+
+.content button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.content button:hover {
+    background-color: #333;
+}

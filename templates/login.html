@@ -1,0 +1,307 @@
+
+
+{% extends "base.html" %}
+{% block title %}Вход и Регистрация{% endblock %}
+
+{% block content %}
+<div class="login-page-container">
+  <div class="login-box">
+    <div class="login-switch">
+      <span class="login-label">Вход</span>
+      <label class="login-toggle">
+        <input type="checkbox" id="loginSwitch">
+        <span class="login-slider"></span>
+      </label>
+      <span class="login-label">Регистрация</span>
+    </div>
+
+    <!-- ФОРМА ВХОДА -->
+    <div id="loginBlock">
+      <p class="login-title">Вход</p>
+      <form id="loginFormElement">
+        <div class="login-group">
+          <input type="email" id="loginEmail" placeholder="Почта" class="login-input" required>
+        </div>
+        <div class="login-group">
+          <input type="password" id="loginPassword" placeholder="Пароль" class="login-input" required>
+        </div>
+        <button class="login-button" type="submit">Войти</button>
+        <div class="login-links">
+          <span class="login-text-small">Нет аккаунта?</span>
+          <span class="login-text-link" onclick="toggleToRegister()">Зарегистрироваться</span>
+        </div>
+      </form>
+    </div>
+
+    <!-- ФОРМА РЕГИСТРАЦИИ -->
+    <div id="registerBlock" style="display: none;">
+      <p class="login-title">Регистрация</p>
+      <form id="registerFormElement">
+        <div class="login-columns">
+          <div>
+            <div class="login-group">
+              <input type="text" id="regName" placeholder="Имя" class="login-input" required>
+            </div>
+            <div class="login-group">
+              <input type="text" id="regSurname" placeholder="Фамилия" class="login-input" required>
+            </div>
+            <div class="login-group">
+              <input type="date" id="regBirth" class="login-input" required>
+            </div>
+            <div class="login-group">
+              <label class="login-subtitle">Пол:</label>
+              <div style="display: flex; gap: 20px;">
+                <label><input type="radio" name="gender" value="male" required> Мужской</label>
+                <label><input type="radio" name="gender" value="female"> Женский</label>
+              </div>
+            </div>
+            <div class="login-group">
+              <input type="email" id="regEmail" placeholder="Email" class="login-input" required>
+            </div>
+          </div>
+          <div>
+            <div class="login-group">
+              <input type="tel" id="regPhone" placeholder="Телефон" class="login-input" required>
+            </div>
+            <div class="login-group">
+              <select id="regRole" class="login-input" required>
+                <option value="" disabled selected>Выберите роль</option>
+                <option value="buyer">Покупатель</option>
+                <option value="seller">Продавец</option>
+              </select>
+            </div>
+            <div class="login-group">
+              <input type="password" id="regPassword" placeholder="Пароль" class="login-input" required>
+            </div>
+            <div class="login-group">
+              <input type="password" id="regRepassword" placeholder="Повторите пароль" class="login-input" required>
+            </div>
+          </div>
+        </div>
+        <button class="login-button" type="submit">Зарегистрироваться</button>
+        <div class="login-links">
+          <span class="login-text-small">Уже есть аккаунт?</span>
+          <span class="login-text-link" onclick="toggleToLogin()">Войти</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+.login-page-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+.login-box {
+  background: #EDDCD9;
+  border: 2px solid #264143;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 3px 4px 0px 1px #E99F4C;
+  max-width: 900px;
+  width: 100%;
+}
+.login-switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.login-label {
+  font-weight: bold;
+  font-size: 16px;
+}
+.login-toggle {
+  position: relative;
+  width: 50px;
+  height: 24px;
+}
+.login-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.login-slider {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  border-radius: 34px;
+  border: 2px solid #333;
+  box-shadow: 2px 2px 0px 0px #E99F4C;
+  transition: 0.4s;
+}
+.login-slider::before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: -1px;
+  bottom: 1px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: 0.4s;
+  border: 2px solid #333;
+  box-shadow: 0 2px 0 #333;
+}
+.login-toggle input:checked + .login-slider {
+  background-color: #BC2649;
+}
+.login-toggle input:checked + .login-slider::before {
+  transform: translateX(26px);
+}
+.login-title {
+  color: #264143;
+  font-weight: 900;
+  font-size: 1.5em;
+  margin-top: 10px;
+  text-align: center;
+}
+.login-subtitle {
+  font-weight: 600;
+  margin: 5px 0;
+}
+.login-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 10px;
+}
+.login-input {
+  outline: none;
+  border: 2px solid #264143;
+  box-shadow: 3px 4px 0px 1px #E99F4C;
+  width: 290px;
+  padding: 12px 10px;
+  border-radius: 4px;
+  font-size: 15px;
+}
+.login-button {
+  padding: 15px;
+  margin: 25px auto 10px;
+  width: 290px;
+  font-size: 15px;
+  background: #DE5499;
+  border-radius: 10px;
+  font-weight: 800;
+  box-shadow: 3px 3px 0px 0px #E99F4C;
+  border: none;
+  display: block;
+  cursor: pointer;
+}
+.login-links {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+.login-text-small {
+  font-size: 14px;
+  color: #333;
+}
+.login-text-link {
+  font-size: 14px;
+  color: #264143;
+  font-weight: 700;
+  cursor: pointer;
+}
+.login-text-link:hover {
+  color: #BC2649;
+}
+.login-columns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const loginSwitch = document.getElementById('loginSwitch');
+    const loginBlock = document.getElementById('loginBlock');
+    const registerBlock = document.getElementById('registerBlock');
+
+    loginSwitch.addEventListener('change', () => {
+      if (loginSwitch.checked) {
+        loginBlock.style.display = 'none';
+        registerBlock.style.display = 'block';
+      } else {
+        loginBlock.style.display = 'block';
+        registerBlock.style.display = 'none';
+      }
+    });
+
+    function toggleToRegister() {
+      loginSwitch.checked = true;
+      registerBlock.style.display = 'block';
+      loginBlock.style.display = 'none';
+    }
+
+    function toggleToLogin() {
+      loginSwitch.checked = false;
+      loginBlock.style.display = 'block';
+      registerBlock.style.display = 'none';
+    }
+
+    window.toggleToRegister = toggleToRegister;
+    window.toggleToLogin = toggleToLogin;
+
+    // ЛОГИН
+    document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      const response = await fetch('/log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        window.location.href = '/profile';
+      } else {
+        alert('Ошибка входа. Проверь почту и пароль.');
+      }
+    });
+
+    // РЕГИСТРАЦИЯ
+    document.getElementById('registerFormElement').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('regName').value;
+      const surname = document.getElementById('regSurname').value;
+      const birth = document.getElementById('regBirth').value;
+      const gender = document.querySelector('input[name="gender"]:checked')?.value;
+      const email = document.getElementById('regEmail').value;
+      const phone = document.getElementById('regPhone').value;
+      const role = document.getElementById('regRole').value;
+      const password = document.getElementById('regPassword').value;
+      const repassword = document.getElementById('regRepassword').value;
+
+      if (password !== repassword) {
+        alert('Пароли не совпадают!');
+        return;
+      }
+
+      const response = await fetch('/reg', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, surname, birth, gender, email, phone, role, password })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        window.location.href = '/profile';
+      } else {
+        alert('Ошибка регистрации. Возможно, пользователь уже существует.');
+      }
+    });
+  });
+</script>
+{% endblock %}
+

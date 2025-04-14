@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавление товара</title>
+    <link rel="stylesheet" href="../static/create_item.css">
+</head>
+<body>
+    <header>
+        Личный кабинет
+        <button id="back-button" onclick="goBack()">Назад</button>
+    </header>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="profile">Моя информация</a></li>
+                <li><a href="items" id="">Мои товары</a></li>
+                <li><a href="#">Аналитика продаж</a></li>
+                <li><a href="#">Настройки</a></li>
+                <li><a href="#" id="logout-link">Выйти</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <div class="form-container">
+                <h2>Добавление товара</h2>
+                <div class="form-group">
+                    <label for="category">Выбор категории:</label>
+                    <select id="category" name="category">
+                        <option value="top">Верхняя одежда</option>
+                        <option value="bottom">Нижняя одежда</option>
+                        <option value="shoes">Обувь</option>
+                        <option value="accessories">Аксессуары</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="product-name">Название товара:</label>
+                    <input type="text" id="product-name" name="product-name">
+                </div>
+                <div class="form-group">
+                    <label for="product-images">Добавление изображений:</label>
+                    <input type="file" id="product-images" name="product-images" multiple>
+                    <div class="image-preview" id="image-preview"></div>
+                </div>
+                <div class="form-group">
+                    <label for="product-description">Описание товара:</label>
+                    <textarea id="product-description" name="product-description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Цена товара:</label>
+                    <input type="number" id="product-price" name="product-price" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="product-quantity">Количество товара:</label>
+                    <input type="number" id="product-quantity" name="product-quantity">
+                </div>
+                <div class="form-group">
+                    <button type="button" id="add-item-button">Добавить товар</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('logout-link').addEventListener('click', function(event) {
+            event.preventDefault();  // Предотвращаем стандартное поведение ссылки
+            fetch('/logout')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/';  // Перенаправляем на главную страницу после выхода
+                    } else {
+                        alert('Ошибка при выходе из системы.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Ошибка при выходе из системы.');
+                });
+        });
+
+        document.getElementById('product-images').addEventListener('change', function(event) {
+            const files = event.target.files;
+            const imagePreview = document.getElementById('image-preview');
+            imagePreview.innerHTML = '';
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    imagePreview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('add-item-button').addEventListener('click', function() {
+            const category = document.getElementById('category').value;
+            const productName = document.getElementById('product-name').value;
+            const productDescription = document.getElementById('product-description').value;
+            const productPrice = document.getElementById('product-price').value;
+            const productQuantity = document.getElementById('product-quantity').value;
+            const productImages = document.getElementById('product-images').files;
+
+            const formData = new FormData();
+            formData.append('category', category);
+            formData.append('product_name', productName);
+            formData.append('product_description', productDescription);
+            formData.append('product_price', productPrice);
+            formData.append('product_quantity', productQuantity);
+
+            for (let i = 0; i < productImages.length; i++) {
+                formData.append('product_images', productImages[i]);
+            }
+
+            fetch('/add_item', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Товар успешно добавлен!');
+                    // Очистка формы
+                    window.location.href='/items'
+                } else {
+                    alert('Ошибка при добавлении товара.');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Ошибка при добавлении товара.');
+            });
+        });
+
+        function goBack() {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

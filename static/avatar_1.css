@@ -1,0 +1,76 @@
+/* static/avatar.css */
+.content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--black);
+    margin-bottom: 1.5rem;
+  }
+  
+  #model-container {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: var(--light-gray);
+    border: 4px solid var(--black);
+    border-radius: 2rem;
+    box-shadow: 6px 6px 0 var(--black);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  
+  #modelCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
+  .zoom-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .zoom-button {
+    font-size: 2rem;
+    width: 3rem;
+    height: 3rem;
+    background: var(--white);
+    border: 3px solid var(--black);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--black);
+  }
+  
+  .zoom-button:hover {
+    background: var(--gray);
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .button-group button {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    background: var(--white);
+    border: 3px solid var(--black);
+    border-radius: 1rem;
+    box-shadow: 4px 4px 0 var(--black);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  
+  .button-group button:hover {
+    background: var(--magenta);
+    color: var(--white);
+    transform: scale(1.05);
+  }

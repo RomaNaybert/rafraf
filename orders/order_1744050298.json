@@ -1,0 +1,24 @@
+{
+  "id": 1744050298,
+  "name": "кп",
+  "address": "куп, дом п, г. укп, укп",
+  "email": "teach.digoxin-0n@icloud.com",
+  "cart": [
+    {
+      "id": 89,
+      "size": "36",
+      "quantity": 1
+    },
+    {
+      "id": "84",
+      "quantity": 1,
+      "size": "XS"
+    },
+    {
+      "id": 106,
+      "quantity": 1,
+      "size": "S"
+    }
+  ],
+  "time": "2025-04-07T23:24:58.834028"
+}

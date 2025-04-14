@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <title>rafraf</title>
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:image/svg+xml,
+  %3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 100 100'%3E
+    %3Crect width='100' height='100' rx='20' fill='black'/%3E
+    %3Ctext x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-size='50'
+      font-family='Arial Black, sans-serif' fill='white'%3ER%3C/text%3E
+  %3C/svg%3E">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+        
+</head>
+<body>
+    <div class="container">
+        <header>
+          
+            <!-- Бургер-меню -->
+            <div class="burger" id="burger">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <!-- Логотип -->
+            <div class="logo">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип">
+            </div>
+            <!-- Навигационное меню -->
+            <nav id="nav">
+                <!-- Переключатели в нео-бруталистском стиле -->
+                <div class="switch-wrapper">
+                    <div class="wrapper">
+                        <div class="option">
+                            <input class="input" type="radio" name="category" id="cat-home"
+                              onclick="location.href='{{ url_for('home') }}'"
+                                   {% if request.path == '/' %}checked{% endif %}>
+                            <div class="btn"><span class="span">Главная</span></div>
+                        </div>
+                        <div class="option">
+                            <input class="input" type="radio" name="category" id="cat-top"
+                                   onclick="location.href='{{ url_for('clothes', category='top') }}';"
+                                   {% if request.path == '/clothes' and request.args.get('category') == 'top' %}checked{% endif %}>
+                            <div class="btn"><span class="span">Товары</span></div>
+                        </div>
+                        <div class="option">
+                          <input class="input" type="radio" name="category" id="cat-studio"
+                                 onclick="location.href='{{ url_for('studio') }}'"
+                                 {% if request.path == '/studio' %}checked{% endif %}>
+                          <div class="btn"><span class="span">Ателье</span></div>
+                      </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Блок с иконками -->
+            <div class="user-actions">
+                {% include 'auth_modal.html' %}
+                <a href="#" class="button" id="openSearch"><i class="fas fa-search"></i></a>
+                <a href="/cart" class="button cart-button" id="cartIconWrapper" style="position: relative;">
+                  <i class="fas fa-shopping-cart"></i>
+                  <span class="cart-count-badge" id="cartCountBadge">0</span>
+                </a>
+                
+                <div id="mini-cart" style="
+  position: fixed;
+  right: 20px;
+  top: 70px;
+  display: none;
+  width: 280px;
+  background: white;
+  border: 2px solid black;
+  box-shadow: 5px 5px 0 black;
+  padding: 10px;
+  border-radius: 8px;
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+">
+  <strong>🛍 Добавлено в корзину</strong>
+  <div id="mini-cart-content" style="margin-top:10px;"></div>
+</div>
+<div id="auth-button-container"></div>
+            </div>
+        </header>
+
+        <main id="content" class="main-centered">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <footer>
+          <div class="footer-content">
+            <p class="footer-title">Социальные сети</p>
+            <div class="footer-buttons">
+              <a href="https://vk.com" class="button" target="_blank" rel="noopener">
+                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/vk.svg" alt="VK">
+              </a>
+              <a href="https://youtube.com" class="button" target="_blank" rel="noopener">
+                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" alt="YouTube">
+              </a>
+              <a href="https://instagram.com" class="button" target="_blank" rel="noopener">
+                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg" alt="Instagram">
+              </a>
+            </div>
+        
+            <div class="footer-support">
+              <p>Проект создан при поддержке Федерального государственного бюджетного учреждения «Фонд содействия развитию малых форм предприятий в
+                научно-технической сфере» в рамках программы «Студенческий стартап» федерального проекта «Платформа университетского технологического
+                предпринимательства»</p>
+              <img src="/static/img/support-logo.png" alt="Логотип поддержки">
+            </div>
+          </div>
+        </footer>
+    </div>
+<!-- 🔍 Модалка для результатов поиска -->
+<div id="searchProductModal" class="product-modal hidden">
+  <div class="modal-content search-modal-content">
+    <img id="searchModalImage" src="" alt="" class="modal-img">
+    <div class="modal-details">
+      <h2 id="searchModalTitle"></h2>
+      <p id="searchModalDescription"></p>
+
+      <div id="searchModalSizeLabel" class="modal-size-label"></div>
+      <select class="card-select" id="searchModalSizeSelect"></select>
+
+      <div class="modal-price" id="searchModalPrice"></div>
+
+      <button class="card-btn fancy-cart-btn" id="searchModalAddToCart">Добавить в корзину</button>
+    </div>
+    <button class="modal-close" onclick="closeSearchProductModal()">✖</button>
+  </div>
+</div>
+    <script>
+      const burger = document.getElementById('burger');
+      const nav = document.getElementById('nav');
+    
+      burger.addEventListener('click', () => {
+        nav.classList.add('active');
+      });
+    
+      // Закрытие меню по кнопке ✕
+      document.addEventListener('click', function (e) {
+        if (e.target.matches('.close-btn')) {
+          nav.classList.remove('active');
+        }
+      });
+    </script>
+    <script>
+      function showRecommendations() {
+        document.getElementById('recommendation-popup').classList.remove('hidden');
+      }
+      function hideRecommendations() {
+        document.getElementById('recommendation-popup').classList.add('hidden');
+      }
+    </script>
+    <script>
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      function updateCartCount() {
+        const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+        document.querySelector('.cart-count').innerText = cartCount;
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        updateCartCount();
+
+        
+      });
+    </script>
+   <script>
+    const cartIconWrapper = document.getElementById('cartIconWrapper');
+    const miniCart = document.getElementById('mini-cart');
+    const miniCartContent = document.getElementById('mini-cart-content');
+  
+    let hoverTimeout;
+  
+    function showMiniCart() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      fetch('/api/products')
+        .then(res => res.json())
+        .then(products => {
+          miniCartContent.innerHTML = '';
+          cart.forEach(item => {
+            const product = products.find(p => p.id == item.id);
+            if (!product) return;
+            const el = document.createElement('div');
+            el.innerHTML = `<small>${product.title}</small> × ${item.quantity}`;
+            miniCartContent.appendChild(el);
+          });
+  
+          miniCart.style.display = 'block';
+          setTimeout(() => {
+            miniCart.style.opacity = '1';
+          }, 10);
+        });
+    }
+  
+    function hideMiniCart() {
+      miniCart.style.opacity = '0';
+      hoverTimeout = setTimeout(() => {
+        miniCart.style.display = 'none';
+      }, 300);
+    }
+  
+    function cancelHideMiniCart() {
+      clearTimeout(hoverTimeout);
+    }
+  </script>
+    <script>
+      function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const count = cart.reduce((acc, item) => acc + item.quantity, 0);
+        const badge = document.getElementById('cartCountBadge');
+        badge.innerText = count;
+        badge.style.display = count > 0 ? 'inline-block' : 'none';
+      }
+    
+      document.addEventListener('DOMContentLoaded', updateCartCount);
+    </script>
+    <div id="global-loader">
+      <div class="spinner">
+        <div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div>
+      </div>
+    </div>
+    <script>
+      window.addEventListener('load', () => {
+        document.getElementById('global-loader').classList.add('hidden');
+      });
+    </script>
+<script>
+  async function performSearch() {
+    const query = document.getElementById("searchInput").value.toLowerCase().trim();
+    const productResults = document.getElementById("productResults");
+    productResults.innerHTML = "";
+
+    if (!query) {
+      productResults.innerHTML = '<p>Введите запрос для поиска</p>';
+      return;
+    }
+
+    const apiRes = await fetch('/api/products');
+    const apiData = await apiRes.json();
+
+    const matchedProducts = apiData.filter(p => {
+      const title = (p.translated_title || p.title || "").toLowerCase();
+      return title.includes(query);
+    });
+
+    if (matchedProducts.length === 0) {
+      productResults.innerHTML = '<p>Ничего не найдено</p>';
+      return;
+    }
+
+    matchedProducts.forEach(p => {
+      const card = document.createElement("div");
+      card.classList.add("product-card");
+      const buttonId = `cart-btn-${p.id}`;
+      const translated = p.translated_title || p.title;
+
+      card.innerHTML = `
+        <img src="${p.thumbnail}" alt="${translated}" onload="adjustCardHeight(this)">
+        <div class="product-card-title">${translated}</div>
+        <div class="product-card-price">${p.price} ₽</div>
+        <button id="${buttonId}" class="cart-btn" onclick="addToCart('${p.id}', \`${translated}\`, ${p.price}, '${buttonId}')">В корзину</button>
+      `;
+
+      // 👉 При клике на карточку (кроме кнопки) — открываем модалку
+      card.addEventListener('click', (e) => {
+  if (!e.target.classList.contains('cart-btn')) {
+    openSearchProductModal(p);
+  }
+});
+
+      productResults.appendChild(card);
+    });
+  }
+  function openSearchProductModal(product) {
+  const modal = document.getElementById('searchProductModal');
+  const img = document.getElementById('searchModalImage');
+
+  img.style.opacity = 0;
+  img.src = product.thumbnail;
+  img.onload = () => {
+    img.style.opacity = 1;
+  };
+
+  document.getElementById('searchModalTitle').textContent = product.translated_title || product.title;
+  document.getElementById('searchModalDescription').textContent = product.translated_description || 'Описание отсутствует';
+  document.getElementById('searchModalPrice').textContent = `${product.price} ₽`;
+
+  const sizeSelect = document.getElementById('searchModalSizeSelect');
+  const sizeLabel = document.getElementById('searchModalSizeLabel');
+  sizeSelect.innerHTML = '';
+
+  const title = (product.title || '').toLowerCase();
+  if (title.includes('shoe') || title.includes('sneaker') || title.includes('nike')) {
+    sizeLabel.textContent = 'Размер обуви:';
+    [36, 37, 38, 39, 40, 41, 42, 43, 44].forEach(size => {
+      const opt = document.createElement('option');
+      opt.value = size;
+      opt.textContent = size;
+      sizeSelect.appendChild(opt);
+    });
+  } else if (title.includes('watch')) {
+    sizeLabel.textContent = 'Размер ремешка:';
+    ['S', 'M', 'L'].forEach(size => {
+      const opt = document.createElement('option');
+      opt.value = size;
+      opt.textContent = size;
+      sizeSelect.appendChild(opt);
+    });
+  } else if (title.includes('shirt') || title.includes('tshirt') || title.includes('hoodie') || title.includes('jacket')) {
+    sizeLabel.textContent = 'Размер:';
+    ['XS', 'S', 'M', 'L', 'XL'].forEach(size => {
+      const opt = document.createElement('option');
+      opt.value = size;
+      opt.textContent = size;
+      sizeSelect.appendChild(opt);
+    });
+  } else {
+    sizeLabel.textContent = 'Без размера';
+  }
+
+  document.getElementById('searchModalAddToCart').onclick = () => {
+    const selectedSize = sizeSelect.value;
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existing = cart.find(item => item.id === product.id && item.size === selectedSize);
+    if (existing) existing.quantity += 1;
+    else cart.push({
+  id: product.id,
+  title: product.translated_title || product.title,
+  price: product.price,
+  size: selectedSize,
+  quantity: 1
+});
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    closeSearchProductModal();
+    showMiniCartTemp?.();
+  };
+
+  modal.classList.remove('hidden');
+}
+
+function closeSearchProductModal() {
+  document.getElementById('searchProductModal').classList.add('hidden');
+}
+  function adjustCardHeight(img) {
+    const card = img.closest('.product-card');
+    card.style.minHeight = card.offsetHeight + 'px';
+  }
+
+  function openSearchModal() {
+    document.getElementById("searchModal").style.display = "flex";
+    document.getElementById("searchInput").focus();
+  }
+
+  function closeSearchModal() {
+    document.getElementById("searchModal").style.display = "none";
+  }
+
+  function addToCart(id, title, price, buttonId) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const item = cart.find(i => i.id == id);
+    if (item) item.quantity += 1;
+    else cart.push({
+  id: product.id,
+  title: product.translated_title || product.title,
+  price: product.price,
+  size: selectedSize,
+  quantity: 1
+});
+    localStorage.setItem('cart', JSON.stringify(cart));
+    const btn = document.getElementById(buttonId);
+    if (btn) {
+      btn.innerHTML = '✔ Добавлено';
+      btn.disabled = true;
+      btn.style.background = '#BC2649';
+    }
+    updateCartCount();
+  }
+
+  function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const count = cart.reduce((acc, item) => acc + item.quantity, 0);
+    const badge = document.getElementById('cartCountBadge');
+    if (badge) {
+      badge.innerText = count;
+      badge.style.display = count > 0 ? 'inline-block' : 'none';
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const openBtn = document.getElementById("openSearch");
+    if (openBtn) {
+      openBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        openSearchModal();
+      });
+    }
+    updateCartCount();
+  });
+</script>
+    
+    <!-- Модальное окно поиска -->
+    <div id="searchModal" class="search-modal" style="display: none;">
+      <div class="modal-content">
+        <label class="brutalist-label" for="searchInput">Поиск по сайту</label>
+        <div class="input-wrapper">
+          <input type="text" id="searchInput" class="brutalist-input smooth-type" placeholder="Печатать здесь" onkeydown="if(event.key==='Enter'){performSearch()}" />
+          <div class="search-actions-inline">
+            <button class="search-btn" onclick="performSearch()" title="Поиск">
+              <i class="fas fa-search"></i>
+            </button>
+            <button class="close-btn" onclick="closeSearchModal()" title="Закрыть">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+    
+        <div class="search-results">
+          <h2>Нашлось в товарах</h2>
+          <div id="productResults" class="product-cards-container"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      async function checkAuthStatusAndRenderButton() {
+        try {
+          const response = await fetch('/check_session');
+          const data = await response.json();
+          const container = document.getElementById('auth-button-container');
+    
+          if (data.logged_in) {
+            container.innerHTML = `
+  <a href="/profile" class="button">
+    <i class="fas fa-user"></i>
+  </a>
+`;
+          } else {
+            container.innerHTML = `
+  <button class="brutalist-button" onclick="openAuthModal()">
+    <div class="button-text">
+      <span>Login /</span>
+      <span>Sign Up</span>
+    </div>
+  </button>
+`;
+          }
+        } catch (err) {
+          console.error('Ошибка проверки авторизации:', err);
+        }
+      }
+    
+      // Запуск при загрузке страницы
+      document.addEventListener('DOMContentLoaded', checkAuthStatusAndRenderButton);
+    </script>
+    <div id="productModal" class="product-modal hidden">
+      <div class="modal-content">
+        <img id="modalImage" src="" alt="" class="modal-img">
+        <div class="modal-details">
+          <h2 id="modalTitle"></h2>
+          <p id="modalDescription"></p>
+    
+          <div id="modalSizeLabel" class="modal-size-label"></div>
+          <select class="card-select" id="modalSizeSelect"></select>
+    
+          <div class="modal-price" id="modalPrice"></div>
+    
+          <button class="card-btn fancy-cart-btn" id="modalAddToCart">Добавить в корзину</button>
+        </div>
+        <button class="modal-close" onclick="closeModal()">✖</button>
+      </div>
+    </div>
+    
+    <style>
+.product-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 0;
+  overflow-y: auto;
+}
+    .product-modal.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .search-modal-content {
+  max-width: 700px;
+  padding: 30px;
+  gap: 24px;
+}
+.modal-content {
+  display: flex;
+  flex-direction: column; /* 🧠 В колонку, не в строку! */
+  gap: 40px;
+  background: white;
+  border: 3px solid black;
+  box-shadow: 8px 8px 0 black;
+  border-radius: 10px;
+  padding: 40px 40px 60px 40px; /* отступы: сверху, справа, снизу, слева */
+  max-width: 800px;
+  width: 90%;
+  transform: translateY(-20px) scale(1);
+  transition: all 0.4s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalGrow 0.4s ease forwards;
+  position: relative;
+}
+@media (max-height: 700px) {
+  .search-modal-content {
+    transform: scale(0.8);
+  }
+}
+.modal-content {
+  display: flex;
+  gap: 40px;
+  background: white;
+  border: 3px solid black;
+  box-shadow: 8px 8px 0 black;
+  border-radius: 10px;
+  padding: 40px 40px 60px 40px; /* ✅ больше отступ снизу */
+  max-width: 800px;
+  width: 90%;
+  transform: translateY(-20px) scale(1); /* ✅ чуть выше + норм масштаб */
+  transition: all 0.4s ease;
+  position: relative;
+  animation: modalGrow 0.4s ease forwards;
+}
+    @keyframes modalGrow {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .modal-img {
+      width: 300px;
+      height: 300px;
+      object-fit: contain;
+      border: 2px solid black;
+      box-shadow: 4px 4px 0 black;
+      border-radius: 6px;
+    }
+    .modal-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-details h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .modal-details p {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #666;
+    }
+    .modal-size-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .modal-price {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 20px 0 10px;
+    }
+    .fancy-cart-btn {
+      padding: 14px 20px;
+      background: var(--magenta);
+      color: white;
+      font-size: 16px;
+      border: 2px solid black;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 4px 4px 0 black;
+      transition: all 0.3s ease;
+    }
+    .fancy-cart-btn:hover {
+      background: #a81f3c;
+      transform: translateY(-2px);
+      box-shadow: 2px 2px 0 black;
+    }
+    .modal-close {
+      position: absolute;
+      top: 15px; right: 15px;
+      background: transparent;
+      font-size: 24px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    </style>
+    
+    <script>
+    function openModal(product) {
+      const modal = document.getElementById('productModal');
+      const img = document.getElementById('modalImage');
+    
+      // Мгновенно скрываем и обновляем
+      img.style.opacity = 0;
+      img.src = product.thumbnail;
+      img.onload = () => {
+        img.style.opacity = 1;
+      };
+    
+      document.getElementById('modalTitle').textContent = product.translated_title || product.title;
+      document.getElementById('modalDescription').textContent = product.translated_description || 'Описание отсутствует';
+      document.getElementById('modalPrice').textContent = `${product.price} ₽`;
+    
+      const sizeSelect = document.getElementById('modalSizeSelect');
+      const sizeLabel = document.getElementById('modalSizeLabel');
+      sizeSelect.innerHTML = '';
+    
+      const title = (product.title || '').toLowerCase();
+      if (title.includes('shoe') || title.includes('sneaker') || title.includes('nike') || title.includes('rider') || title.includes('slipper')) {
+        sizeLabel.textContent = 'Размер обуви:';
+        [36, 37, 38, 39, 40, 41, 42, 43, 44].forEach(size => {
+          const opt = document.createElement('option');
+          opt.value = size;
+          opt.textContent = size;
+          sizeSelect.appendChild(opt);
+        });
+      } else if (title.includes('watch')) {
+        sizeLabel.textContent = 'Размер ремешка:';
+        ['S', 'M', 'L'].forEach(size => {
+          const opt = document.createElement('option');
+          opt.value = size;
+          opt.textContent = size;
+          sizeSelect.appendChild(opt);
+        });
+      } else if (title.includes('shirt') || title.includes('tshirt') || title.includes('jacket') || title.includes('coat') || title.includes('dress') || title.includes('hoodie') || title.includes('clothing') || title.includes('suit') || title.includes('skirt') || title.includes('gown')) {
+        sizeLabel.textContent = 'Размер:';
+        ['XS', 'S', 'M', 'L', 'XL'].forEach(size => {
+          const opt = document.createElement('option');
+          opt.value = size;
+          opt.textContent = size;
+          sizeSelect.appendChild(opt);
+        });
+      } else {
+        sizeLabel.textContent = 'Без размера';
+        
+        };
+    
+      document.getElementById('modalAddToCart').onclick = () => {
+        const selectedSize = sizeSelect.value;
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existing = cart.find(item => item.id === product.id && item.size === selectedSize);
+        if (existing) existing.quantity += 1;
+        else cart.push({
+  id: product.id,
+  title: product.translated_title || product.title,
+  price: product.price,
+  size: selectedSize,
+  quantity: 1
+});
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        closeModal();
+        showMiniCartTemp();
+      };
+    
+      modal.classList.remove('hidden');
+    }
+    
+    function closeModal() {
+      document.getElementById('productModal').classList.add('hidden');
+    }
+    
+    setTimeout(() => {
+      document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => {
+          const id = card.querySelector('.add-to-cart-btn')?.dataset.id;
+          if (!id) return;
+          fetch('/api/products')
+            .then(res => res.json())
+            .then(products => {
+              const product = products.find(p => String(p.id) === id);
+              if (product) openModal(product);
+            });
+        });
+      });
+    }, 500);
+    </script>
+   
+   <style>
+    @media (max-width: 768px) {
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        background: white;
+        z-index: 9999;
+        border-bottom: 3px solid black;
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 15px;
+      }
+    
+      .mobile-burger {
+        font-size: 22px;
+        background: white;
+        border: 2px solid black;
+        box-shadow: 3px 3px 0 black;
+        border-radius: 50%;
+        width: 42px;
+        height: 42px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+      }
+    
+      .mobile-logo {
+        height: 36px;
+      }
+    
+      .mobile-expanded {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        width: 100vw;
+        height: 33vh;
+        background: white;
+        border-bottom: 3px solid black;
+        display: none;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px 10px;
+        z-index: 9998;
+        box-shadow: 0px 5px 0 black;
+      }
+    
+      .mobile-expanded.active {
+        display: flex;
+      }
+    
+      .mobile-expanded .nav-buttons,
+      .mobile-expanded .icon-buttons {
+        display: flex;
+        justify-content: space-around;
+        gap: 10px;
+      }
+    
+      .mobile-expanded button,
+      .mobile-expanded a {
+        padding: 12px 16px;
+        border: 2px solid black;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 3px 3px 0 black;
+        font-weight: bold;
+        font-size: 16px;
+        text-decoration: none;
+        color: black;
+      }
+    
+      .mobile-expanded .close-btn {
+        align-self: center;
+        font-size: 16px;
+        background: #BC2649;
+        border: #BC2649;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        /* text-decoration: underline; */
+      }
+    }
+    </style>
+      
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          if (window.innerWidth <= 768) {
+            const header = document.querySelector("header");
+        
+            // Удалим иконку профиля, если есть
+            const profileIcon = header.querySelector(".user-actions");
+            if (profileIcon) profileIcon.remove();
+        
+            // Создаем бургер и логотип
+            const burger = document.createElement("div");
+            burger.className = "mobile-burger";
+            burger.innerHTML = '<i class="fas fa-bars"></i>';
+        
+            const logo = document.createElement("img");
+            logo.src = "{{ url_for('static', filename='logo.png') }}";
+            logo.alt = "Логотип";
+            logo.className = "mobile-logo";
+        
+            // Расставим по краям
+            header.innerHTML = "";
+            header.appendChild(burger);
+            // header.appendChild(logo);
+        
+            // Создаём меню
+            const expanded = document.createElement("div");
+            expanded.className = "mobile-expanded";
+            expanded.innerHTML = `
+              <div class="nav-buttons">
+                <button onclick="location.href='/'">Главная</button>
+                <button onclick="location.href='/clothes?category=top'">Товары</button>
+                <button onclick="location.href='/studio'">Ателье</button>
+              </div>
+              <div class="icon-buttons">
+                <a href="#" onclick="openSearchModal()"><i class="fas fa-search"></i></a>
+                <a href="/cart"><i class="fas fa-shopping-cart"></i></a>
+                <a href="/profile"><i class="fas fa-user"></i></a>
+              </div>
+              <button class="close-btn">✕ Закрыть</button>
+            `;
+            document.body.appendChild(expanded);
+        
+            burger.addEventListener("click", () => {
+              expanded.classList.add("active");
+            });
+        
+            expanded.querySelector(".close-btn").addEventListener("click", () => {
+              expanded.classList.remove("active");
+            });
+          }
+        });
+        </script>
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const params = new URLSearchParams(window.location.search);
+          if (params.get('show_login') === 'true') {
+            openAuthModal(); // вызывается твоя функция из модалки
+          }
+        });
+      </script>
+      {% if request.args.get('show_login') == 'true' %}
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          openAuthModal();
+        });
+      </script>
+      {% endif %}
+      
+</body>
+</html>

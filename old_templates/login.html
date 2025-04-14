@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+    <link rel="stylesheet" href="../static/login.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Вход</h1>
+        <form id="loginForm">
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Пароль" required>
+            <button type="submit">Войти</button>
+        </form>
+        <a onclick="register()" href="#">Еще нет аккаунта? Зарегистрироваться</a>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Предотвращаем стандартное поведение формы
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                fetch('/log', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        'email': email,
+                        'password': password
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/'; // Редирект на главную страницу
+                    } else {
+                        alert('Ошибка при входе. Пожалуйста, попробуйте снова.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Произошла ошибка. Пожалуйста, попробуйте снова.');
+                });
+            });
+        });
+
+        function register() {
+            window.location.href = "/register";
+        }
+    </script>
+</body>
+</html>
