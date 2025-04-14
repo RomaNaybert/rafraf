@@ -1,2 +1,5 @@
-type: python
-entrypoint: gunicorn app:app
+version: '1.0'
+build:
+  dockerfile: Dockerfile
+run:
+  command: python app.py
