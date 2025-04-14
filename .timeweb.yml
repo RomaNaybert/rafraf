@@ -1,5 +1,4 @@
-version: '1.0'
+type: python
+entrypoint: gunicorn app:app --bind 0.0.0.0:$PORT
 build:
-  dockerfile: Dockerfile
-run:
-  command: python app.py
+  requirements: requirements.txt
