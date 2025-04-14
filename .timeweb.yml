@@ -1,1 +1,6 @@
-run: gunicorn main:app
+build:
+  commands:
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+
+run: gunicorn main:app --timeout 60 --bind 0.0.0.0:80
