@@ -268,7 +268,7 @@ def order_history():
 
     # Получаем все товары
     try:
-        products = requests.get("http://127.0.0.1:5000/api/products").json()
+        products = requests.get("https://rafraf.ru/api/products").json()
     except Exception as e:
         print("❌ Не удалось получить товары:", e)
         products = []
@@ -329,7 +329,7 @@ def send_order_email(to_email, order_id, name, address, cart):
 
     # Загружаем все товары
     try:
-        all_products = requests.get("http://127.0.0.1:5000/api/products").json()
+        all_products = requests.get("https://rafraf.ru/api/products").json()
         logging.info("Товары успешно загружены с API")
     except Exception as e:
         logging.error(f"Ошибка при загрузке товаров: {str(e)}")
